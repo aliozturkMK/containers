@@ -1,0 +1,74 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+    
+version: '3.8'
+services:
+      
+  giris:
+    image: docker.io/bitnami/keycloak:22
+    container_name: giris
+    restart: always    
+    environment:
+      - KEYCLOAK_PRODUCTION=true
+      - KEYCLOAK_DATABASE_VENDOR=postgresql      
+      - KEYCLOAK_DATABASE_HOST=pgpool
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=mk_keycloak
+      - KEYCLOAK_DATABASE_USER=uygulama_keycloak
+      - KEYCLOAK_DATABASE_PASSWORD=keycloak2023mk
+      - KEYCLOAK_DATABASE_SCHEMA=public
+      - KEYCLOAK_HTTP_PORT=7080
+      - KEYCLOAK_HTTPS_PORT=7443
+      - KEYCLOAK_BIND_ADDRESS=0.0.0.0
+      - KEYCLOAK_ENABLE_HTTPS=false
+      - KEYCLOAK_ENABLE_TLS=true
+      - KEYCLOAK_HTTPS_TRUST_STORE_FILE=/opt/bitnami/keycloak/certs/truststore.p12
+      - KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD=prog79ali
+#      - KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD=mkcert
+      - KEYCLOAK_HTTPS_KEY_STORE_FILE=/opt/bitnami/keycloak/certs/keystore.p12
+      - KEYCLOAK_HTTPS_KEY_STORE_PASSWORD=prog79ali
+#      - KEYCLOAK_HTTPS_KEY_STORE_PASSWORD=mkcert
+      - KEYCLOAK_SPI_TRUSTSTORE_FILE=/opt/bitnami/keycloak/certs/truststore.p12
+      - KEYCLOAK_SPI_TRUSTSTORE_PASSWORD=prog79ali
+#      - KEYCLOAK_SPI_TRUSTSTORE_PASSWORD=mkcert      
+      - KEYCLOAK_ENABLE_HEALTH_ENDPOINTS=true
+      - KEYCLOAK_CREATE_ADMIN_USER=true
+      - KEYCLOAK_ADMIN_USER=mkadmin
+      - KEYCLOAK_ADMIN_PASSWORD=mkkeycloak23
+      - KEYCLOAK_PROXY=edge
+      - KEYCLOAK_FEATURES= admin2, docker, preview, account-api, admin-api, client-policies, web-authn
+      - KEYCLOAK_HOSTNAME_URL=https://giris.template.theworkpc.com
+      - KEYCLOAK_HOSTNAME_ADMIN_URL=https://giris.template.theworkpc.com
+      - KEYCLOAK_HOSTNAME_STRICT=true 
+      - KEYCLOAK_HOSTNAME_STRICT_HTTPS=false
+      - TZ=Europe/Istanbul
+    tty: true  
+    stdin_open: true
+    volumes:
+        - type: bind
+          source: /home/abildir/localcert/truststore.p12        
+#          source: /yedek/localcert/truststore.p12
+          target: /opt/bitnami/keycloak/certs/truststore.p12
+        - type: bind
+          source: /home/abildir/localcert/truststore.p12        
+#          source: /yedek/localcert/keystore.p12
+          target: /opt/bitnami/keycloak/certs/keystore.p12
+          
+    ports:
+      - "7080:8080"
+      - "7443:8443"
+
+    networks:
+      backend-network:
+        aliases:
+          - giris
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7080/health/live"]
+      interval: 5s
+      timeout: 2s
+      retries: 15
+
+networks:
+  backend-network:
+    name: backenddb
+    external: true
