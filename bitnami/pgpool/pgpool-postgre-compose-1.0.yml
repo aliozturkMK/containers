@@ -17,6 +17,12 @@ services:
       - POSTGRESQL_PASSWORD=custompassword
       - POSTGRESQL_DATABASE=customdatabase
       - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=1
+      - POSTGRESQL_MAX_CONNECTIONS=1550
+      - POSTGRESQL_TIMEZONE=Europe/Istanbul
+      - POSTGRESQL_LOG_TIMEZONE=Europe/Istanbul
+      - POSTGRESQL_LANG=tr_TR.utf8
+      - POSTGRESQL_LANGUAGE=tr_TR
+      - POSTGRESQL_LC_ALL=tr_TR.UTF-8      
       - REPMGR_PRIMARY_HOST=pg-0
       - REPMGR_PARTNER_NODES=pg-1,pg-0
       - REPMGR_NODE_NAME=pg-0
@@ -28,7 +34,7 @@ services:
       - LC_ALL=tr_TR.UTF-8
       - TZ=Europe/Istanbul
     networks:
-      - backend-network
+      - backenddb-network
     tty: true
     stdin_open: true
 ##################
@@ -48,6 +54,12 @@ services:
       - POSTGRESQL_PASSWORD=custompassword
       - POSTGRESQL_DATABASE=customdatabase
       - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=1
+      - POSTGRESQL_MAX_CONNECTIONS=1550
+      - POSTGRESQL_TIMEZONE=Europe/Istanbul
+      - POSTGRESQL_LOG_TIMEZONE=Europe/Istanbul
+      - POSTGRESQL_LANG=tr_TR.utf8
+      - POSTGRESQL_LANGUAGE=tr_TR
+      - POSTGRESQL_LC_ALL=tr_TR.UTF-8
       - REPMGR_PRIMARY_HOST=pg-0
       - REPMGR_PARTNER_NODES=pg-0,pg-1
       - REPMGR_NODE_NAME=pg-1
@@ -59,7 +71,7 @@ services:
       - LC_ALL=tr_TR.UTF-8
       - TZ=Europe/Istanbul
     networks:
-      - backend-network
+      - backenddb-network
     tty: true
     stdin_open: true
 ##################
@@ -81,8 +93,13 @@ services:
       - PGPOOL_ADMIN_USERNAME=admin
       - PGPOOL_ADMIN_PASSWORD=adminpassword
       - PGPOOL_ENABLE_LOAD_BALANCING=yes
-      - PGPOOL_POSTGRES_CUSTOM_USERS=customuser,kong,konga,keycloak,owncloud
-      - PGPOOL_POSTGRES_CUSTOM_PASSWORDS=custompassword,kong,konga,keycloak,owncloud
+      - PGPOOL_ENABLE_STATEMENT_LOAD_BALANCING=yes
+      - PGPOOL_MAX_POOL=15
+      - PGPOOL_NUM_INIT_CHILDREN=96
+      - PGPOOL_RESERVED_CONNECTIONS=0
+      - PGPOOL_CONNECTION_LIFE_TIME=6000
+      - PGPOOL_POSTGRES_CUSTOM_USERS=customuser,kong,keycloak,owncloud,robotika
+      - PGPOOL_POSTGRES_CUSTOM_PASSWORDS=custompassword,kingkong,keycloak,owncloud,zdLy2wZMCf
       - TZ=Europe/Istanbul
     healthcheck:
       test: ["CMD", "/opt/bitnami/scripts/pgpool/healthcheck.sh"]
@@ -90,7 +107,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - backend-network
+      backend-network:
+        aliases:
+          - pgpool
+      backenddb-network:
+        aliases:
+          - pgpool
     tty: true
     stdin_open: true
     
@@ -103,9 +125,8 @@ volumes:
 
 networks:
   backend-network:
-      name: backenddb
-      driver: bridge
-      ipam:
-       config:
-        - subnet: "172.20.0.0/16"
-        - subnet: "2002:3985:4000::/64"
+    name: backend
+    external: true
+  backenddb-network:
+    name: backenddb
+    external: true
