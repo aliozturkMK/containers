@@ -3,24 +3,24 @@
         "arch": "amd64",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "1.4.6-3"
+        "version": "1.4.6-7"
     },
     "mysql-shell": {
         "arch": "amd64",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "8.0.35-2"
+        "version": "8.0.36-1"
     },
     "percona-mysql": {
         "arch": "amd64",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "8.0.34-26-0"
+        "version": "8.0.35-27-1"
     },
     "percona-xtrabackup-binary": {
         "arch": "amd64",
         "distro": "debian-11",
         "type": "NAMI",
-        "version": "8.0.30-23-8"
+        "version": "8.0.35-30-4"
     }
 }

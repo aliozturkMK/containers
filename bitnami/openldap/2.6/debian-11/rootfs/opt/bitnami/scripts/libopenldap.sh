@@ -646,6 +646,7 @@ ldap_initialize() {
         if is_boolean_yes "$LDAP_ENABLE_SYNCPROV"; then
             ldap_enable_syncprov
         fi
+        # load custom ldifs
         if ! is_dir_empty "$LDAP_CUSTOM_LDIF_DIR"; then
             ldap_add_custom_ldifs
         elif ! is_boolean_yes "$LDAP_SKIP_DEFAULT_TREE"; then
@@ -660,7 +661,7 @@ ldap_initialize() {
                 ldap_configure_tls_required
             fi
         fi
-        ldap_stop
+       ldap_stop
     fi
 }
 

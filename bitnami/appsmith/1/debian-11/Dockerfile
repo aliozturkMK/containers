@@ -7,13 +7,13 @@ ARG TARGETARCH
 
 LABEL com.vmware.cp.artifact.flavor="sha256:1e1b4657a77f0d47e9220f0c37b9bf7802581b93214fff7d1bd2364c8bf22e8e" \
       org.opencontainers.image.base.name="docker.io/bitnami/minideb:bullseye" \
-      org.opencontainers.image.created="2023-11-25T09:59:00Z" \
+      org.opencontainers.image.created="2024-02-07T17:39:22Z" \
       org.opencontainers.image.description="Application packaged by VMware, Inc" \
       org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.ref.name="1.9.47-debian-11-r1" \
+      org.opencontainers.image.ref.name="1.10.0-debian-11-r0" \
       org.opencontainers.image.title="appsmith" \
       org.opencontainers.image.vendor="VMware, Inc." \
-      org.opencontainers.image.version="1.9.47"
+      org.opencontainers.image.version="1.10.0"
 
 ENV HOME="/" \
     OS_ARCH="${TARGETARCH:-amd64}" \
@@ -26,14 +26,14 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 RUN install_packages acl ca-certificates curl gettext libbz2-1.0 libcom-err2 libcrypt1 libffi7 libgcc-s1 libgeoip1 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 liblzma5 libncursesw6 libnsl2 libpcre3 libreadline8 libsqlite3-0 libssl1.1 libstdc++6 libtinfo6 libtirpc3 openssl procps zlib1g
 RUN mkdir -p /tmp/bitnami/pkg/cache/ ; cd /tmp/bitnami/pkg/cache/ ; \
     COMPONENTS=( \
-      "python-3.11.6-11-linux-${OS_ARCH}-debian-11" \
-      "wait-for-port-1.0.7-3-linux-${OS_ARCH}-debian-11" \
-      "render-template-1.0.6-3-linux-${OS_ARCH}-debian-11" \
-      "node-18.18.2-0-linux-${OS_ARCH}-debian-11" \
-      "nginx-1.25.3-1-linux-${OS_ARCH}-debian-11" \
-      "mongodb-shell-2.1.0-0-linux-${OS_ARCH}-debian-11" \
-      "java-17.0.9-11-6-linux-${OS_ARCH}-debian-11" \
-      "appsmith-1.9.47-0-linux-${OS_ARCH}-debian-11" \
+      "render-template-1.0.6-8-linux-${OS_ARCH}-debian-11" \
+      "python-3.11.8-0-linux-${OS_ARCH}-debian-11" \
+      "wait-for-port-1.0.7-8-linux-${OS_ARCH}-debian-11" \
+      "node-18.19.0-1-linux-${OS_ARCH}-debian-11" \
+      "nginx-1.25.3-4-linux-${OS_ARCH}-debian-11" \
+      "mongodb-shell-2.1.3-0-linux-${OS_ARCH}-debian-11" \
+      "java-17.0.10-13-1-linux-${OS_ARCH}-debian-11" \
+      "appsmith-1.10.0-0-linux-${OS_ARCH}-debian-11" \
     ) ; \
     for COMPONENT in "${COMPONENTS[@]}"; do \
       if [ ! -f "${COMPONENT}.tar.gz" ]; then \
@@ -47,15 +47,16 @@ RUN mkdir -p /tmp/bitnami/pkg/cache/ ; cd /tmp/bitnami/pkg/cache/ ; \
 RUN apt-get update && apt-get upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
+RUN find / -perm /6000 -type f -exec chmod a-s {} \; || true
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/nginx/postunpack.sh
 RUN /opt/bitnami/scripts/appsmith/postunpack.sh
-ENV APP_VERSION="1.9.47" \
+ENV APP_VERSION="1.10.0" \
     BITNAMI_APP_NAME="appsmith" \
     NGINX_HTTPS_PORT_NUMBER="" \
     NGINX_HTTP_PORT_NUMBER="" \
-    PATH="/opt/bitnami/python/bin:/opt/bitnami/common/bin:/opt/bitnami/node/bin:/opt/bitnami/nginx/sbin:/opt/bitnami/mongodb/bin:/opt/bitnami/java/bin:$PATH"
+    PATH="/opt/bitnami/common/bin:/opt/bitnami/python/bin:/opt/bitnami/node/bin:/opt/bitnami/nginx/sbin:/opt/bitnami/mongodb/bin:/opt/bitnami/java/bin:$PATH"
 
 EXPOSE 3000 8080 8091 8443
 
