@@ -21,7 +21,7 @@ You can find the default credentials and available configuration options in the 
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Apache Tomcat in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -148,35 +148,37 @@ Access your web server in the browser by navigating to `http://localhost:8080`.
 | `TOMCAT_HTTP_PORT_NUMBER`        | Tomcat HTTP port number.                                                              | `8080`                                                                                                                                                       |
 | `TOMCAT_AJP_PORT_NUMBER`         | Tomcat AJP port number.                                                               | `8009`                                                                                                                                                       |
 | `TOMCAT_USERNAME`                | Tomcat username.                                                                      | `manager`                                                                                                                                                    |
+| `TOMCAT_PASSWORD`                | Tomcat password.                                                                      | `nil`                                                                                                                                                        |
 | `TOMCAT_ALLOW_REMOTE_MANAGEMENT` | Whether to allow connections from remote addresses to the Tomcat manager application. | `yes`                                                                                                                                                        |
-| `TOMCAT_ALLOW_REMOTE_MANAGEMENT` | Whether to allow connections from remote addresses to the Tomcat manager application. | `no`                                                                                                                                                         |
 | `TOMCAT_ENABLE_AUTH`             | Whether to enable authentication for Tomcat manager applications.                     | `yes`                                                                                                                                                        |
 | `TOMCAT_ENABLE_AJP`              | Whether to enable the Tomcat AJP connector.                                           | `no`                                                                                                                                                         |
 | `TOMCAT_START_RETRIES`           | The number or retries while waiting for Catalina to start.                            | `12`                                                                                                                                                         |
+| `TOMCAT_EXTRA_JAVA_OPTS`         | Additional Java settings for Tomcat.                                                  | `nil`                                                                                                                                                        |
 | `TOMCAT_INSTALL_DEFAULT_WEBAPPS` | Whether to add default webapps (ROOT, manager, host-manager, etc.) for deployment.    | `yes`                                                                                                                                                        |
 | `JAVA_OPTS`                      | Java runtime parameters.                                                              | `-Djava.awt.headless=true -XX:+UseG1GC -Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true -Duser.home=${TOMCAT_HOME}` |
 
 #### Read-only environment variables
 
-| Name                     | Description                                        | Value                                 |
-|--------------------------|----------------------------------------------------|---------------------------------------|
-| `TOMCAT_BASE_DIR`        | Tomcat installation directory.                     | `${BITNAMI_ROOT_DIR}/tomcat`          |
-| `TOMCAT_VOLUME_DIR`      | Tomcat persistence directory.                      | `/bitnami/tomcat`                     |
-| `TOMCAT_BIN_DIR`         | Tomcat directory for binary files.                 | `${TOMCAT_BASE_DIR}/bin`              |
-| `TOMCAT_LIB_DIR`         | Tomcat directory for library files.                | `${TOMCAT_BASE_DIR}/lib`              |
-| `TOMCAT_WORK_DIR`        | Tomcat directory for runtime files.                | `${TOMCAT_BASE_DIR}/work`             |
-| `TOMCAT_WEBAPPS_DIR`     | Tomcat directory where webapps are stored.         | `${TOMCAT_VOLUME_DIR}/webapps`        |
-| `TOMCAT_CONF_DIR`        | Tomcat configuration directory.                    | `${TOMCAT_BASE_DIR}/conf`             |
-| `TOMCAT_CONF_FILE`       | Tomcat configuration file.                         | `${TOMCAT_CONF_DIR}/server.xml`       |
-| `TOMCAT_USERS_CONF_FILE` | Tomcat configuration file.                         | `${TOMCAT_CONF_DIR}/tomcat-users.xml` |
-| `TOMCAT_LOGS_DIR`        | Directory where Tomcat logs are stored.            | `${TOMCAT_BASE_DIR}/logs`             |
-| `TOMCAT_TMP_DIR`         | Directory where Tomcat temporary files are stored. | `${TOMCAT_BASE_DIR}/temp`             |
-| `TOMCAT_LOG_FILE`        | Path to the log file for Tomcat.                   | `${TOMCAT_LOGS_DIR}/catalina.out`     |
-| `TOMCAT_PID_FILE`        | Path to the PID file for Tomcat.                   | `${TOMCAT_TMP_DIR}/catalina.pid`      |
-| `TOMCAT_HOME`            | Tomcat home directory.                             | `$TOMCAT_BASE_DIR`                    |
-| `TOMCAT_DAEMON_USER`     | Tomcat system user.                                | `tomcat`                              |
-| `TOMCAT_DAEMON_GROUP`    | Tomcat system group.                               | `tomcat`                              |
-| `JAVA_HOME`              | Java installation folder.                          | `${BITNAMI_ROOT_DIR}/java`            |
+| Name                      | Description                                        | Value                                 |
+|---------------------------|----------------------------------------------------|---------------------------------------|
+| `TOMCAT_BASE_DIR`         | Tomcat installation directory.                     | `${BITNAMI_ROOT_DIR}/tomcat`          |
+| `TOMCAT_VOLUME_DIR`       | Tomcat persistence directory.                      | `/bitnami/tomcat`                     |
+| `TOMCAT_BIN_DIR`          | Tomcat directory for binary files.                 | `${TOMCAT_BASE_DIR}/bin`              |
+| `TOMCAT_LIB_DIR`          | Tomcat directory for library files.                | `${TOMCAT_BASE_DIR}/lib`              |
+| `TOMCAT_WORK_DIR`         | Tomcat directory for runtime files.                | `${TOMCAT_BASE_DIR}/work`             |
+| `TOMCAT_WEBAPPS_DIR`      | Tomcat directory where webapps are stored.         | `${TOMCAT_VOLUME_DIR}/webapps`        |
+| `TOMCAT_CONF_DIR`         | Tomcat configuration directory.                    | `${TOMCAT_BASE_DIR}/conf`             |
+| `TOMCAT_DEFAULT_CONF_DIR` | Tomcat default configuration directory.            | `${TOMCAT_BASE_DIR}/conf.default`     |
+| `TOMCAT_CONF_FILE`        | Tomcat configuration file.                         | `${TOMCAT_CONF_DIR}/server.xml`       |
+| `TOMCAT_USERS_CONF_FILE`  | Tomcat configuration file.                         | `${TOMCAT_CONF_DIR}/tomcat-users.xml` |
+| `TOMCAT_LOGS_DIR`         | Directory where Tomcat logs are stored.            | `${TOMCAT_BASE_DIR}/logs`             |
+| `TOMCAT_TMP_DIR`          | Directory where Tomcat temporary files are stored. | `${TOMCAT_BASE_DIR}/temp`             |
+| `TOMCAT_LOG_FILE`         | Path to the log file for Tomcat.                   | `${TOMCAT_LOGS_DIR}/catalina.out`     |
+| `TOMCAT_PID_FILE`         | Path to the PID file for Tomcat.                   | `${TOMCAT_TMP_DIR}/catalina.pid`      |
+| `TOMCAT_HOME`             | Tomcat home directory.                             | `$TOMCAT_BASE_DIR`                    |
+| `TOMCAT_DAEMON_USER`      | Tomcat system user.                                | `tomcat`                              |
+| `TOMCAT_DAEMON_GROUP`     | Tomcat system group.                               | `tomcat`                              |
+| `JAVA_HOME`               | Java installation folder.                          | `${BITNAMI_ROOT_DIR}/java`            |
 
 #### Creating a custom user
 

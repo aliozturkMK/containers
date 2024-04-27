@@ -19,7 +19,7 @@ docker run -it --name gotrue bitnami/gotrue
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use GoTrue in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -86,50 +86,52 @@ docker run --name gotrue bitnami/gotrue:latest
 
 #### Customizable environment variables
 
-| Name                                  | Description                     | Default Value                                                                                                |
-|---------------------------------------|---------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `DB_HOST`                             | Database host                   | `localhost`                                                                                                  |
-| `DB_PORT`                             | Database port number            | `5432`                                                                                                       |
-| `DB_NAME`                             | Database name                   | `postgres`                                                                                                   |
-| `DB_USER`                             | Database user username          | `postgres`                                                                                                   |
-| `DB_SSL`                              | Database SSL connection enabled | `disable`                                                                                                    |
-| `GOTRUE_DB_DATABASE_URL`              | Database URL                    | `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?search_path=auth&sslmode=${DB_SSL}` |
-| `GOTRUE_URI_ALLOW_LIST`               |                                 | `*`                                                                                                          |
-| `GOTRUE_SITE_URL`                     |                                 | `http://localhost:80`                                                                                        |
-| `GOTRUE_API_PORT`                     |                                 | `9999`                                                                                                       |
-| `GOTRUE_API_HOST`                     |                                 | `0.0.0.0`                                                                                                    |
-| `GOTRUE_DISABLE_SIGNUP`               |                                 | `false`                                                                                                      |
-| `GOTRUE_DB_DRIVER`                    |                                 | `postgres`                                                                                                   |
-| `GOTRUE_JWT_DEFAULT_GROUP_NAME`       |                                 | `authenticated`                                                                                              |
-| `GOTRUE_JWT_ADMIN_ROLES`              |                                 | `service_role`                                                                                               |
-| `GOTRUE_JWT_AUD`                      |                                 | `authenticated`                                                                                              |
-| `GOTRUE_JWT_EXP`                      |                                 | `3600`                                                                                                       |
-| `GOTRUE_EXTERNAL_EMAIL_ENABLED`       |                                 | `true`                                                                                                       |
-| `GOTRUE_MAILER_AUTOCONFIRM`           |                                 | `true`                                                                                                       |
-| `GOTRUE_SMTP_ADMIN_EMAIL`             |                                 | `your-mail@example.com`                                                                                      |
-| `GOTRUE_SMTP_HOST`                    |                                 | `smtp.exmaple.com`                                                                                           |
-| `GOTRUE_SMTP_PORT`                    |                                 | `587`                                                                                                        |
-| `GOTRUE_SMTP_SENDER_NAME`             |                                 | `your-mail@example.com`                                                                                      |
-| `GOTRUE_EXTERNAL_PHONE_ENABLED`       |                                 | `false`                                                                                                      |
-| `GOTRUE_SMS_AUTOCONFIRM`              |                                 | `false`                                                                                                      |
-| `GOTRUE_MAILER_URLPATHS_INVITE`       |                                 | `http://localhost:80/auth/v1/verify`                                                                         |
-| `GOTRUE_MAILER_URLPATHS_CONFIRMATION` |                                 | `http://localhost:80/auth/v1/verify`                                                                         |
-| `GOTRUE_MAILER_URLPATHS_RECOVERY`     |                                 | `http://localhost:80/auth/v1/verify`                                                                         |
-| `GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE` |                                 | `http://localhost:80/auth/v1/verify`                                                                         |
+| Name                                  | Description                                  | Default Value                                                                                                |
+|---------------------------------------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `DB_HOST`                             | Database host                                | `localhost`                                                                                                  |
+| `DB_PORT`                             | Database port number                         | `5432`                                                                                                       |
+| `DB_NAME`                             | Database name                                | `postgres`                                                                                                   |
+| `DB_USER`                             | Database user username                       | `postgres`                                                                                                   |
+| `DB_PASSWORD`                         | Database password                            | `nil`                                                                                                        |
+| `DB_SSL`                              | Database SSL connection enabled              | `disable`                                                                                                    |
+| `GOTRUE_DB_DATABASE_URL`              | Database URL                                 | `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?search_path=auth&sslmode=${DB_SSL}` |
+| `GOTRUE_URI_ALLOW_LIST`               |                                              | `*`                                                                                                          |
+| `GOTRUE_OPERATOR_TOKEN`               | Operator token                               | `nil`                                                                                                        |
+| `GOTRUE_JWT_SECRET`                   | JWT Secret                                   | `nil`                                                                                                        |
+| `GOTRUE_SITE_URL`                     |                                              | `http://localhost:80`                                                                                        |
+| `GOTRUE_API_PORT`                     |                                              | `9999`                                                                                                       |
+| `GOTRUE_API_HOST`                     |                                              | `0.0.0.0`                                                                                                    |
+| `API_EXTERNAL_URL`                    | The URL on which Gotrue might be accessed at | `http://localhost:9999`                                                                                      |
+| `GOTRUE_DISABLE_SIGNUP`               |                                              | `false`                                                                                                      |
+| `GOTRUE_DB_DRIVER`                    |                                              | `postgres`                                                                                                   |
+| `GOTRUE_DB_MIGRATIONS_PATH`           |                                              | `${GOTRUE_BASE_DIR}`                                                                                         |
+| `GOTRUE_JWT_DEFAULT_GROUP_NAME`       |                                              | `authenticated`                                                                                              |
+| `GOTRUE_JWT_ADMIN_ROLES`              |                                              | `service_role`                                                                                               |
+| `GOTRUE_JWT_AUD`                      |                                              | `authenticated`                                                                                              |
+| `GOTRUE_JWT_EXP`                      |                                              | `3600`                                                                                                       |
+| `GOTRUE_EXTERNAL_EMAIL_ENABLED`       |                                              | `true`                                                                                                       |
+| `GOTRUE_MAILER_AUTOCONFIRM`           |                                              | `true`                                                                                                       |
+| `GOTRUE_SMTP_ADMIN_EMAIL`             |                                              | `your-mail@example.com`                                                                                      |
+| `GOTRUE_SMTP_HOST`                    |                                              | `smtp.exmaple.com`                                                                                           |
+| `GOTRUE_SMTP_PORT`                    |                                              | `587`                                                                                                        |
+| `GOTRUE_SMTP_SENDER_NAME`             |                                              | `your-mail@example.com`                                                                                      |
+| `GOTRUE_EXTERNAL_PHONE_ENABLED`       |                                              | `false`                                                                                                      |
+| `GOTRUE_SMS_AUTOCONFIRM`              |                                              | `false`                                                                                                      |
+| `GOTRUE_MAILER_URLPATHS_INVITE`       |                                              | `http://localhost:80/auth/v1/verify`                                                                         |
+| `GOTRUE_MAILER_URLPATHS_CONFIRMATION` |                                              | `http://localhost:80/auth/v1/verify`                                                                         |
+| `GOTRUE_MAILER_URLPATHS_RECOVERY`     |                                              | `http://localhost:80/auth/v1/verify`                                                                         |
+| `GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE` |                                              | `http://localhost:80/auth/v1/verify`                                                                         |
 
 #### Read-only environment variables
 
-| Name                    | Description                                                       | Value                           |
-|-------------------------|-------------------------------------------------------------------|---------------------------------|
-| `GOTRUE_BASE_DIR`       | gotrue installation directory.                                    | `${BITNAMI_ROOT_DIR}/gotrue`    |
-| `GOTRUE_LOGS_DIR`       | Directory where gotrue logs are stored.                           | `${GOTRUE_BASE_DIR}/logs`       |
-| `GOTRUE_LOG_FILE`       | Directory where gotrue logs are stored.                           | `${GOTRUE_LOGS_DIR}/gotrue.log` |
-| `GOTRUE_BIN_DIR`        | gotrue directory for binary executables.                          | `${GOTRUE_BASE_DIR}/bin`        |
-| `GOTRUE_TMP_DIR`        | Directory where gotrue temporary files are stored.                | `${GOTRUE_BASE_DIR}/tmp`        |
-| `GOTRUE_PID_FILE`       | Path to the PID file for gotrue.                                  | `${GOTRUE_TMP_DIR}/gotrue.pid`  |
-| `GOTRUE_EXTRA_ENV_FILE` | File to store extra environment variables for the gotrue service. | `${GOTRUE_BASE_DIR}/.env`       |
-| `GOTRUE_DAEMON_USER`    | postgrest system user.                                            | `supabase`                      |
-| `GOTRUE_DAEMON_GROUP`   | postgrest system group.                                           | `supabase`                      |
+| Name                  | Description                              | Value                           |
+|-----------------------|------------------------------------------|---------------------------------|
+| `GOTRUE_BASE_DIR`     | gotrue installation directory.           | `${BITNAMI_ROOT_DIR}/gotrue`    |
+| `GOTRUE_LOGS_DIR`     | Directory where gotrue logs are stored.  | `${GOTRUE_BASE_DIR}/logs`       |
+| `GOTRUE_LOG_FILE`     | Directory where gotrue logs are stored.  | `${GOTRUE_LOGS_DIR}/gotrue.log` |
+| `GOTRUE_BIN_DIR`      | gotrue directory for binary executables. | `${GOTRUE_BASE_DIR}/bin`        |
+| `GOTRUE_DAEMON_USER`  | postgrest system user.                   | `supabase`                      |
+| `GOTRUE_DAEMON_GROUP` | postgrest system group.                  | `supabase`                      |
 
 ### Running commands
 

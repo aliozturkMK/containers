@@ -21,7 +21,7 @@ You can find the available configuration options in the [Environment Variables](
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use OpenSearch in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -182,19 +182,34 @@ docker-compose up -d
 | Name                                           | Description                                                                                                         | Default Value                               |
 |------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------|
 | `OPENSEARCH_CERTS_DIR`                         | Path to certificates folder.                                                                                        | `${DB_CONF_DIR}/certs`                      |
+| `OPENSEARCH_DATA_DIR_LIST`                     | Comma, semi-colon or space separated list of directories to use for data storage                                    | `nil`                                       |
+| `OPENSEARCH_BIND_ADDRESS`                      | Opensearch bind address                                                                                             | `nil`                                       |
+| `OPENSEARCH_ADVERTISED_HOSTNAME`               | Opensearch advertised hostname, used for publish                                                                    | `nil`                                       |
+| `OPENSEARCH_CLUSTER_HOSTS`                     | Opensearch cluster hosts                                                                                            | `nil`                                       |
+| `OPENSEARCH_CLUSTER_MASTER_HOSTS`              | Opensearch cluster master hosts                                                                                     | `nil`                                       |
+| `OPENSEARCH_CLUSTER_NAME`                      | Opensearch cluster name                                                                                             | `nil`                                       |
 | `OPENSEARCH_HEAP_SIZE`                         | Opensearch heap size                                                                                                | `1024m`                                     |
 | `OPENSEARCH_MAX_ALLOWED_MEMORY_PERCENTAGE`     | Opensearch maximum allowed memory percentage                                                                        | `100`                                       |
+| `OPENSEARCH_MAX_ALLOWED_MEMORY`                | Opensearch maximum allowed memory amount (in megabytes)                                                             | `nil`                                       |
 | `OPENSEARCH_MAX_TIMEOUT`                       | Opensearch maximum init timeout                                                                                     | `60`                                        |
 | `OPENSEARCH_LOCK_ALL_MEMORY`                   | Sets bootstrap.memory_lock parameter                                                                                | `no`                                        |
 | `OPENSEARCH_DISABLE_JVM_HEAP_DUMP`             | Disable JVM Heap dump                                                                                               | `no`                                        |
 | `OPENSEARCH_DISABLE_GC_LOGS`                   | Disable GC logs                                                                                                     | `no`                                        |
 | `OPENSEARCH_IS_DEDICATED_NODE`                 | If false, Opensearch will be configured with all the roles, deploy as dedicated node using DB_NODE_ROLES.           | `no`                                        |
+| `OPENSEARCH_MINIMUM_MASTER_NODES`              | Minimum number of master nodes                                                                                      | `nil`                                       |
+| `OPENSEARCH_NODE_NAME`                         | Opensearch node name                                                                                                | `nil`                                       |
+| `OPENSEARCH_FS_SNAPSHOT_REPO_PATH`             | Opensearch node port number                                                                                         | `nil`                                       |
+| `OPENSEARCH_NODE_ROLES`                        | Comma-separated list of Opensearch roles. If empty, will be deployed as a coordinating-only node.                   | `nil`                                       |
+| `OPENSEARCH_PLUGINS`                           | List of Opensearch plugins to activate                                                                              | `nil`                                       |
 | `OPENSEARCH_TRANSPORT_PORT_NUMBER`             | Opensearch node port number                                                                                         | `9300`                                      |
 | `OPENSEARCH_HTTP_PORT_NUMBER`                  | Opensearch port                                                                                                     | `9200`                                      |
 | `OPENSEARCH_ENABLE_SECURITY`                   | Enable Opensearch security settings.                                                                                | `false`                                     |
 | `OPENSEARCH_PASSWORD`                          | Password for "admin" user.                                                                                          | `bitnami`                                   |
 | `OPENSEARCH_TLS_VERIFICATION_MODE`             | Opensearch TLS verification mode in transport layer.                                                                | `full`                                      |
 | `OPENSEARCH_TLS_USE_PEM`                       | Configure Security settings using PEM certificates.                                                                 | `false`                                     |
+| `OPENSEARCH_KEYSTORE_PASSWORD`                 | Password for the Opensearch keystore containing the certificates or password-protected PEM key.                     | `nil`                                       |
+| `OPENSEARCH_TRUSTSTORE_PASSWORD`               | Password for the Opensearch truststore.                                                                             | `nil`                                       |
+| `OPENSEARCH_KEY_PASSWORD`                      | Password for the Opensearch node PEM key.                                                                           | `nil`                                       |
 | `OPENSEARCH_KEYSTORE_LOCATION`                 | Path to Keystore                                                                                                    | `${DB_CERTS_DIR}/opensearch.keystore.jks`   |
 | `OPENSEARCH_TRUSTSTORE_LOCATION`               | Path to Truststore.                                                                                                 | `${DB_CERTS_DIR}/opensearch.truststore.jks` |
 | `OPENSEARCH_NODE_CERT_LOCATION`                | Path to PEM node certificate.                                                                                       | `${DB_CERTS_DIR}/tls.crt`                   |
@@ -226,30 +241,34 @@ docker-compose up -d
 | `LOGSTASH_PASSWORD`                            | Password for the Logstash user.                                                                                     | `bitnami`                                   |
 | `OPENSEARCH_SET_CGROUP`                        | Configure Opensearch java opts with cgroup hierarchy override, so cgroup statistics are available in the container. | `true`                                      |
 | `OPENSEARCH_SECURITY_BOOTSTRAP`                | If set to true, this node will be configured with instructions to bootstrap the Opensearch security config.         | `false`                                     |
+| `OPENSEARCH_SECURITY_NODES_DN`                 | Comma-separated list including the Opensearch nodes allowed TLS DNs.                                                | `nil`                                       |
+| `OPENSEARCH_SECURITY_ADMIN_DN`                 | Comma-separated list including the Opensearch Admin user allowed TLS DNs.                                           | `nil`                                       |
 | `OPENSEARCH_SECURITY_ADMIN_CERT_LOCATION`      | Path to the Opensearch Admin PEM certificate.                                                                       | `${DB_CERTS_DIR}/admin.crt`                 |
 | `OPENSEARCH_SECURITY_ADMIN_KEY_LOCATION`       | Path to the Opensearch Admin PEM key.                                                                               | `${DB_CERTS_DIR}/admin.key`                 |
 
 #### Read-only environment variables
 
-| Name                             | Description                                                     | Value                           |
-|----------------------------------|-----------------------------------------------------------------|---------------------------------|
-| `DB_FLAVOR`                      | Database flavor. Valid values: `elasticsearch` or `opensearch`. | `opensearch`                    |
-| `OPENSEARCH_VOLUME_DIR`          | Persistence base directory                                      | `/bitnami/opensearch`           |
-| `OPENSEARCH_BASE_DIR`            | Opensearch installation directory                               | `/opt/bitnami/opensearch`       |
-| `OPENSEARCH_CONF_DIR`            | Opensearch configuration directory                              | `${DB_BASE_DIR}/config`         |
-| `OPENSEARCH_LOGS_DIR`            | Opensearch logs directory                                       | `${DB_BASE_DIR}/logs`           |
-| `OPENSEARCH_PLUGINS_DIR`         | Opensearch plugins directory                                    | `${DB_BASE_DIR}/plugins`        |
-| `OPENSEARCH_DATA_DIR`            | Opensearch data directory                                       | `${DB_VOLUME_DIR}/data`         |
-| `OPENSEARCH_TMP_DIR`             | Opensearch temporary directory                                  | `${DB_BASE_DIR}/tmp`            |
-| `OPENSEARCH_BIN_DIR`             | Opensearch executables directory                                | `${DB_BASE_DIR}/bin`            |
-| `OPENSEARCH_MOUNTED_PLUGINS_DIR` | Directory where plugins are mounted                             | `${DB_VOLUME_DIR}/plugins`      |
-| `OPENSEARCH_CONF_FILE`           | Path to Opensearch configuration file                           | `${DB_CONF_DIR}/opensearch.yml` |
-| `OPENSEARCH_LOG_FILE`            | Path to the Opensearch log file                                 | `${DB_LOGS_DIR}/opensearch.log` |
-| `OPENSEARCH_PID_FILE`            | Path to the Opensearch pid file                                 | `${DB_TMP_DIR}/opensearch.pid`  |
-| `OPENSEARCH_INITSCRIPTS_DIR`     | Path to the Opensearch container init scripts directory         | `/docker-entrypoint-initdb.d`   |
-| `OPENSEARCH_DAEMON_USER`         | Opensearch system user                                          | `opensearch`                    |
-| `OPENSEARCH_DAEMON_GROUP`        | Opensearch system group                                         | `opensearch`                    |
-| `OPENSEARCH_USERNAME`            | Username of the Opensearch superuser.                           | `admin`                         |
+| Name                             | Description                                                     | Value                            |
+|----------------------------------|-----------------------------------------------------------------|----------------------------------|
+| `DB_FLAVOR`                      | Database flavor. Valid values: `elasticsearch` or `opensearch`. | `opensearch`                     |
+| `OPENSEARCH_VOLUME_DIR`          | Persistence base directory                                      | `/bitnami/opensearch`            |
+| `OPENSEARCH_BASE_DIR`            | Opensearch installation directory                               | `/opt/bitnami/opensearch`        |
+| `OPENSEARCH_CONF_DIR`            | Opensearch configuration directory                              | `${DB_BASE_DIR}/config`          |
+| `OPENSEARCH_DEFAULT_CONF_DIR`    | Opensearch default configuration directory                      | `${DB_BASE_DIR}/config.default`  |
+| `OPENSEARCH_LOGS_DIR`            | Opensearch logs directory                                       | `${DB_BASE_DIR}/logs`            |
+| `OPENSEARCH_PLUGINS_DIR`         | Opensearch plugins directory                                    | `${DB_BASE_DIR}/plugins`         |
+| `OPENSEARCH_DEFAULT_PLUGINS_DIR` | Opensearch default plugins directory                            | `${DB_BASE_DIR}/plugins.default` |
+| `OPENSEARCH_DATA_DIR`            | Opensearch data directory                                       | `${DB_VOLUME_DIR}/data`          |
+| `OPENSEARCH_TMP_DIR`             | Opensearch temporary directory                                  | `${DB_BASE_DIR}/tmp`             |
+| `OPENSEARCH_BIN_DIR`             | Opensearch executables directory                                | `${DB_BASE_DIR}/bin`             |
+| `OPENSEARCH_MOUNTED_PLUGINS_DIR` | Directory where plugins are mounted                             | `${DB_VOLUME_DIR}/plugins`       |
+| `OPENSEARCH_CONF_FILE`           | Path to Opensearch configuration file                           | `${DB_CONF_DIR}/opensearch.yml`  |
+| `OPENSEARCH_LOG_FILE`            | Path to the Opensearch log file                                 | `${DB_LOGS_DIR}/opensearch.log`  |
+| `OPENSEARCH_PID_FILE`            | Path to the Opensearch pid file                                 | `${DB_TMP_DIR}/opensearch.pid`   |
+| `OPENSEARCH_INITSCRIPTS_DIR`     | Path to the Opensearch container init scripts directory         | `/docker-entrypoint-initdb.d`    |
+| `OPENSEARCH_DAEMON_USER`         | Opensearch system user                                          | `opensearch`                     |
+| `OPENSEARCH_DAEMON_GROUP`        | Opensearch system group                                         | `opensearch`                     |
+| `OPENSEARCH_USERNAME`            | Username of the Opensearch superuser.                           | `admin`                          |
 
 When you start the opensearch image, you can adjust the configuration of the instance by passing one or more environment variables either on the docker-compose file or on the `docker run` command line. If you want to add a new environment variable:
 

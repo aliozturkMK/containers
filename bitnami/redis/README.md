@@ -21,7 +21,7 @@ docker run --name redis -e ALLOW_EMPTY_PASSWORD=yes bitnami/redis:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Redis&reg; in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -176,17 +176,36 @@ docker-compose up -d
 |----------------------------------|--------------------------------------------------|--------------------------------------------|
 | `REDIS_DATA_DIR`                 | Redis data directory                             | `${REDIS_VOLUME_DIR}/data`                 |
 | `REDIS_OVERRIDES_FILE`           | Redis config overrides file                      | `${REDIS_MOUNTED_CONF_DIR}/overrides.conf` |
+| `REDIS_DISABLE_COMMANDS`         | Commands to disable in Redis                     | `nil`                                      |
 | `REDIS_DATABASE`                 | Default Redis database                           | `redis`                                    |
 | `REDIS_AOF_ENABLED`              | Enable AOF                                       | `yes`                                      |
-| `REDIS_RDB_POLICY_DISABLED`      | Allows to enable RDP policy persistence          | `no`                                       |
+| `REDIS_RDB_POLICY`               | Enable RDB policy persitence                     | `nil`                                      |
+| `REDIS_RDB_POLICY_DISABLED`      | Allows to enable RDB policy persistence          | `no`                                       |
+| `REDIS_MASTER_HOST`              | Redis master host (used by slaves)               | `nil`                                      |
 | `REDIS_MASTER_PORT_NUMBER`       | Redis master host port (used by slaves)          | `6379`                                     |
 | `REDIS_PORT_NUMBER`              | Redis port number                                | `$REDIS_DEFAULT_PORT_NUMBER`               |
 | `REDIS_ALLOW_REMOTE_CONNECTIONS` | Allow remote connection to the service           | `yes`                                      |
+| `REDIS_REPLICATION_MODE`         | Redis replication mode (values: master, slave)   | `nil`                                      |
+| `REDIS_REPLICA_IP`               | The replication announce ip                      | `nil`                                      |
+| `REDIS_REPLICA_PORT`             | The replication announce port                    | `nil`                                      |
+| `REDIS_EXTRA_FLAGS`              | Additional flags pass to 'redis-server' commands | `nil`                                      |
 | `ALLOW_EMPTY_PASSWORD`           | Allow password-less access                       | `no`                                       |
+| `REDIS_PASSWORD`                 | Password for Redis                               | `nil`                                      |
+| `REDIS_MASTER_PASSWORD`          | Redis master node password                       | `nil`                                      |
+| `REDIS_ACLFILE`                  | Redis ACL file                                   | `nil`                                      |
+| `REDIS_IO_THREADS_DO_READS`      | Enable multithreading when reading socket        | `nil`                                      |
+| `REDIS_IO_THREADS`               | Number of threads                                | `nil`                                      |
 | `REDIS_TLS_ENABLED`              | Enable TLS                                       | `no`                                       |
 | `REDIS_TLS_PORT_NUMBER`          | Redis TLS port (requires REDIS_ENABLE_TLS=yes)   | `6379`                                     |
+| `REDIS_TLS_CERT_FILE`            | Redis TLS certificate file                       | `nil`                                      |
+| `REDIS_TLS_CA_DIR`               | Directory containing TLS CA certificates         | `nil`                                      |
+| `REDIS_TLS_KEY_FILE`             | Redis TLS key file                               | `nil`                                      |
+| `REDIS_TLS_KEY_FILE_PASS`        | Redis TLS key file passphrase                    | `nil`                                      |
+| `REDIS_TLS_CA_FILE`              | Redis TLS CA file                                | `nil`                                      |
+| `REDIS_TLS_DH_PARAMS_FILE`       | Redis TLS DH parameter file                      | `nil`                                      |
 | `REDIS_TLS_AUTH_CLIENTS`         | Enable Redis TLS client authentication           | `yes`                                      |
-| `REDIS_DISABLE_SERVICE`          | Whether to disable the Redis service by default. | `no`                                       |
+| `REDIS_SENTINEL_MASTER_NAME`     | Redis Sentinel master name                       | `nil`                                      |
+| `REDIS_SENTINEL_HOST`            | Redis Sentinel host                              | `nil`                                      |
 | `REDIS_SENTINEL_PORT_NUMBER`     | Redis Sentinel host port (used by slaves)        | `26379`                                    |
 
 #### Read-only environment variables
@@ -196,6 +215,7 @@ docker-compose up -d
 | `REDIS_VOLUME_DIR`          | Persistence base directory            | `/bitnami/redis`                |
 | `REDIS_BASE_DIR`            | Redis installation directory          | `${BITNAMI_ROOT_DIR}/redis`     |
 | `REDIS_CONF_DIR`            | Redis configuration directory         | `${REDIS_BASE_DIR}/etc`         |
+| `REDIS_DEFAULT_CONF_DIR`    | Redis default configuration directory | `${REDIS_BASE_DIR}/etc.default` |
 | `REDIS_MOUNTED_CONF_DIR`    | Redis mounted configuration directory | `${REDIS_BASE_DIR}/mounted-etc` |
 | `REDIS_CONF_FILE`           | Redis configuration file              | `${REDIS_CONF_DIR}/redis.conf`  |
 | `REDIS_LOG_DIR`             | Redis logs directory                  | `${REDIS_BASE_DIR}/logs`        |
@@ -475,7 +495,8 @@ Starting with version 6, Redis(R) adds the support for SSL/TLS connections. Shou
 * `REDIS_TLS_PORT_NUMBER`: Port used for TLS secure traffic. Defaults to `6379`.
 * `REDIS_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
 * `REDIS_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
-* `REDIS_TLS_CA_FILE`: File containing the CA of the certificate. No defaults.
+* `REDIS_TLS_CA_FILE`: File containing the CA of the certificate (takes precedence over `REDIS_TLS_CA_DIR`). No defaults.
+* `REDIS_TLS_CA_DIR`: Directory containing the CA certificates. No defaults.
 * `REDIS_TLS_DH_PARAMS_FILE`: File containing DH params (in order to support DH based ciphers). No defaults.
 * `REDIS_TLS_AUTH_CLIENTS`: Whether to require clients to authenticate or not. Defaults to `yes`.
 
@@ -563,6 +584,35 @@ services:
       - /path/to/overrides.conf:/opt/bitnami/redis/mounted-etc/overrides.conf
   ...
 ```
+
+### Enable Redis(R) RDB persistence
+
+When the value of `REDIS_RDB_POLICY_DISABLED` is `no` (default value) the Redis(R) default persistence strategy will be used. If you want to modify the default strategy, you can configure it through the `REDIS_RDB_POLICY` parameter. Here is a demonstration of modifying the default persistence strategy
+
+1. Using `docker run`
+
+    ```console
+    $ docker run --name redis \
+        -v /path/to/redis-data-persistence:/bitnami/redis/data \
+        -e ALLOW_EMPTY_PASSWORD=yes \
+        -e REDIS_RDB_POLICY_DISABLED=no
+        -e REDIS_RDB_POLICY="900#1 600#5 300#10 120#50 60#1000 30#10000"
+        bitnami/redis:latest
+    ```
+
+2. Modifying the `docker-compose.yml` file present in this repository:
+
+    ```yaml
+      redis:
+      ...
+        environment:
+          ...
+          - REDIS_TLS_ENABLED=yes
+          - REDIS_RDB_POLICY_DISABLED=no
+          - REDIS_RDB_POLICY="900#1 600#5 300#10 120#50 60#1000 30#10000"   
+        ...
+      ...
+    ```
 
 ## Logging
 

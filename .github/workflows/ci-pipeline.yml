@@ -61,7 +61,7 @@ jobs:
       pull-requests: write
     needs: get-containers
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
         name: Checkout Repository
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -79,7 +79,7 @@ jobs:
             echo "result=skip" >> $GITHUB_OUTPUT
           fi
       - name: Check license Headers
-        uses: apache/skywalking-eyes/header@6b2529214f6b1ccee3ec92bb0adfeabf6f66f538
+        uses: apache/skywalking-eyes/header@cd7b195c51fd3d6ad52afceb760719ddc6b3ee91
         if: ${{ steps.get-modified-files.outputs.result == 'success' }}
   vib-verify:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
       matrix:
         container: ${{ fromJSON(needs.get-containers.outputs.containers) }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
         name: Checkout Repository
         with:
           # Full history is not required anymore

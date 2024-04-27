@@ -19,7 +19,7 @@ docker run -it --name supabase-storage bitnami/supabase-storage
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Supabase Storage in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -92,7 +92,11 @@ docker run --name supabase-storage bitnami/supabase-storage:latest
 | `DB_PORT`                   | Database port number   | `5432`                                                                    |
 | `DB_NAME`                   | Database name          | `postgres`                                                                |
 | `DB_USER`                   | Database user username | `postgres`                                                                |
+| `DB_PASSWORD`               | Database password      | `nil`                                                                     |
 | `DATABASE_URL`              | Database url           | `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}` |
+| `PGRST_JWT_SECRET`          | JWT key                | `nil`                                                                     |
+| `ANON_KEY`                  | Anon key               | `nil`                                                                     |
+| `SERVICE_KEY`               | Service key            | `nil`                                                                     |
 | `PORT`                      | Service Port           | `5000`                                                                    |
 | `POSTGREST_URL`             | Postgrest url          | `http://localhost:3000`                                                   |
 | `PGOPTIONS`                 | PG Options             | `-c search_path=storage,public`                                           |
@@ -105,17 +109,14 @@ docker run --name supabase-storage bitnami/supabase-storage:latest
 
 #### Read-only environment variables
 
-| Name                              | Description                                                                 | Value                                               |
-|-----------------------------------|-----------------------------------------------------------------------------|-----------------------------------------------------|
-| `SUPABASE_STORAGE_BASE_DIR`       | Supabase-storage installation directory.                                    | `${BITNAMI_ROOT_DIR}/supabase-storage`              |
-| `SUPABASE_STORAGE_LOGS_DIR`       | Directory where Supabase-storage logs are stored.                           | `${SUPABASE_STORAGE_BASE_DIR}/logs`                 |
-| `SUPABASE_STORAGE_LOG_FILE`       | Directory where Supabase-storage logs are stored.                           | `${SUPABASE_STORAGE_LOGS_DIR}/supabase-storage.log` |
-| `SUPABASE_STORAGE_BIN_DIR`        | Supabase-storage directory for binary executables.                          | `${SUPABASE_STORAGE_BASE_DIR}/node_modules/.bin`    |
-| `SUPABASE_STORAGE_TMP_DIR`        | Directory where Supabase-storage temporary files are stored.                | `${SUPABASE_STORAGE_BASE_DIR}/tmp`                  |
-| `SUPABASE_STORAGE_PID_FILE`       | Path to the PID file for Supabase-storage.                                  | `${SUPABASE_STORAGE_TMP_DIR}/supabase-storage.pid`  |
-| `SUPABASE_STORAGE_EXTRA_ENV_FILE` | File to store extra environment variables for the supabase-storage service. | `${SUPABASE_STORAGE_BASE_DIR}/.env`                 |
-| `SUPABASE_STORAGE_DAEMON_USER`    | postgrest system user.                                                      | `supabase`                                          |
-| `SUPABASE_STORAGE_DAEMON_GROUP`   | postgrest system group.                                                     | `supabase`                                          |
+| Name                            | Description                                        | Value                                               |
+|---------------------------------|----------------------------------------------------|-----------------------------------------------------|
+| `SUPABASE_STORAGE_BASE_DIR`     | Supabase-storage installation directory.           | `${BITNAMI_ROOT_DIR}/supabase-storage`              |
+| `SUPABASE_STORAGE_LOGS_DIR`     | Directory where Supabase-storage logs are stored.  | `${SUPABASE_STORAGE_BASE_DIR}/logs`                 |
+| `SUPABASE_STORAGE_LOG_FILE`     | Directory where Supabase-storage logs are stored.  | `${SUPABASE_STORAGE_LOGS_DIR}/supabase-storage.log` |
+| `SUPABASE_STORAGE_BIN_DIR`      | Supabase-storage directory for binary executables. | `${SUPABASE_STORAGE_BASE_DIR}/node_modules/.bin`    |
+| `SUPABASE_STORAGE_DAEMON_USER`  | postgrest system user.                             | `supabase`                                          |
+| `SUPABASE_STORAGE_DAEMON_GROUP` | postgrest system group.                            | `supabase`                                          |
 
 ### Running commands
 

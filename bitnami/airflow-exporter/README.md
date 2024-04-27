@@ -19,7 +19,7 @@ docker run --name airflow-exporter bitnami/airflow-exporter:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Airflow Exporter in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -92,26 +92,23 @@ Find all the configuration options in the [Airflow Prometheus Exporter documenta
 
 #### Customizable environment variables
 
-| Name                                | Description                              | Default Value                          |
-|-------------------------------------|------------------------------------------|----------------------------------------|
-| `AIRFLOW_EXPORTER_BASE_DIR`         | airflow-exporter installation directory. | `${BITNAMI_ROOT_DIR}/airflow-exporter` |
-| `AIRFLOW_EXPORTER_LOGS_DIR`         | airflow-exporter installation directory. | `${AIRFLOW_EXPORTER_BASE_DIR}/logs`    |
-| `AIRFLOW_EXPORTER_TMP_DIR`          | airflow-exporter installation directory. | `${AIRFLOW_EXPORTER_BASE_DIR}/tmp`     |
-| `AIRFLOW_EXPORTER_DATABASE_BACKEND` | The database backend                     | `postgres`                             |
-| `AIRFLOW_EXPORTER_DATABASE_HOST`    | The hostname of the database             | `127.0.0.1`                            |
-| `AIRFLOW_EXPORTER_DATABASE_PORT`    | The port of the database                 | `5432`                                 |
-| `AIRFLOW_EXPORTER_DATABASE_USER`    | The user of the database                 | `bn_airflow`                           |
-| `AIRFLOW_EXPORTER_DATABASE_NAME`    | The name of the database                 | `bitnami_airflow`                      |
+| Name                                 | Description                              | Default Value                          |
+|--------------------------------------|------------------------------------------|----------------------------------------|
+| `AIRFLOW_EXPORTER_BASE_DIR`          | airflow-exporter installation directory. | `${BITNAMI_ROOT_DIR}/airflow-exporter` |
+| `AIRFLOW_EXPORTER_DATABASE_BACKEND`  | The database backend                     | `postgres`                             |
+| `AIRFLOW_EXPORTER_DATABASE_HOST`     | The hostname of the database             | `127.0.0.1`                            |
+| `AIRFLOW_EXPORTER_DATABASE_PORT`     | The port of the database                 | `5432`                                 |
+| `AIRFLOW_EXPORTER_DATABASE_USER`     | The user of the database                 | `bn_airflow`                           |
+| `AIRFLOW_EXPORTER_DATABASE_PASSWORD` | The password of the database             | `nil`                                  |
+| `AIRFLOW_EXPORTER_DATABASE_NAME`     | The name of the database                 | `bitnami_airflow`                      |
 
 #### Read-only environment variables
 
-| Name                            | Description                                        | Value                                               |
-|---------------------------------|----------------------------------------------------|-----------------------------------------------------|
-| `AIRFLOW_EXPORTER_BIN_DIR`      | airflow-exporter directory for binary executables. | `${AIRFLOW_EXPORTER_BASE_DIR}/bin`                  |
-| `AIRFLOW_EXPORTER_DAEMON_USER`  | airflow-exporter system user.                      | `airflow`                                           |
-| `AIRFLOW_EXPORTER_DAEMON_GROUP` | airflow-exporter system group.                     | `airflow`                                           |
-| `AIRFLOW_EXPORTER_PID_FILE`     | PID file for airflow-exporter service.             | `${AIRFLOW_EXPORTER_TMP_DIR}/airflow-exporter.pid`  |
-| `AIRFLOW_EXPORTER_LOG_FILE`     | Log file for airflow-exporter service.             | `${AIRFLOW_EXPORTER_LOGS_DIR}/airflow-exporter.log` |
+| Name                            | Description                                        | Value                              |
+|---------------------------------|----------------------------------------------------|------------------------------------|
+| `AIRFLOW_EXPORTER_BIN_DIR`      | airflow-exporter directory for binary executables. | `${AIRFLOW_EXPORTER_BASE_DIR}/bin` |
+| `AIRFLOW_EXPORTER_DAEMON_USER`  | airflow-exporter system user.                      | `airflow`                          |
+| `AIRFLOW_EXPORTER_DAEMON_GROUP` | airflow-exporter system group.                     | `airflow`                          |
 
 ## Logging
 

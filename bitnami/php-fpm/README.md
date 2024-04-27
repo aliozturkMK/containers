@@ -19,7 +19,7 @@ docker run -it --name phpfpm -v /path/to/app:/app bitnami/php-fpm
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use PHP-FPM in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -198,6 +198,18 @@ docker run -it --name php-fpm -v /path/to/app:/app bitnami/php-fpm \
 
 #### Customizable environment variables
 
+| Name                      | Description                                                                                         | Default Value |
+|---------------------------|-----------------------------------------------------------------------------------------------------|---------------|
+| `PHP_FPM_LISTEN_ADDRESS`  | PHP-FPM listen address. Can be a port number, a host:port combination or the path to a socket file. | `nil`         |
+| `PHP_DATE_TIMEZONE`       | PHP timezone.                                                                                       | `nil`         |
+| `PHP_ENABLE_OPCACHE`      | Enables OPcache for PHP scripts.                                                                    | `nil`         |
+| `PHP_MAX_EXECUTION_TIME`  | Maximum execution time for PHP scripts.                                                             | `nil`         |
+| `PHP_MAX_INPUT_TIME`      | Maximum input time for PHP scripts.                                                                 | `nil`         |
+| `PHP_MAX_INPUT_VARS`      | Maximum amount of input variables for PHP scripts.                                                  | `nil`         |
+| `PHP_MEMORY_LIMIT`        | Memory limit for PHP scripts.                                                                       | `nil`         |
+| `PHP_POST_MAX_SIZE`       | Maximum size for PHP POST requests.                                                                 | `nil`         |
+| `PHP_UPLOAD_MAX_FILESIZE` | Maximum file size for PHP uploads.                                                                  | `nil`         |
+
 #### Read-only environment variables
 
 | Name                                          | Description                                                                                                 | Value                             |
@@ -205,6 +217,7 @@ docker run -it --name php-fpm -v /path/to/app:/app bitnami/php-fpm \
 | `PHP_BASE_DIR`                                | PHP-FPM installation directory.                                                                             | `${BITNAMI_ROOT_DIR}/php`         |
 | `PHP_BIN_DIR`                                 | PHP directory for binary executables.                                                                       | `${PHP_BASE_DIR}/bin`             |
 | `PHP_CONF_DIR`                                | PHP configuration directory.                                                                                | `${PHP_BASE_DIR}/etc`             |
+| `PHP_DEFAULT_CONF_DIR`                        | PHP configuration directory.                                                                                | `${PHP_BASE_DIR}/etc.default`     |
 | `PHP_TMP_DIR`                                 | PHP directory for runtime temporary files.                                                                  | `${PHP_BASE_DIR}/var/run`         |
 | `PHP_CONF_FILE`                               | Path to the PHP configuration file.                                                                         | `${PHP_CONF_DIR}/php.ini`         |
 | `PHP_DEFAULT_OPCACHE_INTERNED_STRINGS_BUFFER` | Default amount of memory used to store interned strings, in megabytes.                                      | `16`                              |

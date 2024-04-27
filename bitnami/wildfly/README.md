@@ -19,7 +19,7 @@ docker run --name wildfly bitnami/wildfly:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use WildFly in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -175,13 +175,21 @@ $ docker exec -it wildfly-server \
 
 #### Customizable environment variables
 
-| Name                       | Description                                                                                   | Default Value                           |
-|----------------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------|
-| `WILDFLY_CONF_FILE`        | Path to the WildFly configuration file.                                                       | `${WILDFLY_CONF_DIR}/standalone.xml`    |
-| `WILDFLY_MOUNTED_CONF_DIR` | Directory for including custom configuration files (that override the default generated ones) | `${WILDFLY_VOLUME_DIR}/configuration`   |
-| `WILDFLY_DATA_DIR`         | WildFly data directory.                                                                       | `${WILDFLY_VOLUME_DIR}/standalone/data` |
-| `WILDFLY_USERNAME`         | WildFly admin username.                                                                       | `user`                                  |
-| `JAVA_HOME`                | Java Home directory.                                                                          | `${BITNAMI_ROOT_DIR}/java`              |
+| Name                                | Description                                                                                   | Default Value                           |
+|-------------------------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------|
+| `WILDFLY_CONF_FILE`                 | Path to the WildFly configuration file.                                                       | `${WILDFLY_CONF_DIR}/standalone.xml`    |
+| `WILDFLY_MOUNTED_CONF_DIR`          | Directory for including custom configuration files (that override the default generated ones) | `${WILDFLY_VOLUME_DIR}/configuration`   |
+| `WILDFLY_DATA_DIR`                  | WildFly data directory.                                                                       | `${WILDFLY_VOLUME_DIR}/standalone/data` |
+| `WILDFLY_SERVER_LISTEN_ADDRESS`     | WildFly server listen address.                                                                | `nil`                                   |
+| `WILDFLY_MANAGEMENT_LISTEN_ADDRESS` | WildFly management listen address.                                                            | `nil`                                   |
+| `WILDFLY_HTTP_PORT_NUMBER`          | Port number used by the WildFly for HTTP connections.                                         | `nil`                                   |
+| `WILDFLY_HTTPS_PORT_NUMBER`         | Port number used by the WildFly for HTTPS connections.                                        | `nil`                                   |
+| `WILDFLY_AJP_PORT_NUMBER`           | Port number used by the WildFly for AJP connections.                                          | `nil`                                   |
+| `WILDFLY_MANAGEMENT_PORT_NUMBER`    | Port number used by the WildFly management interface.                                         | `nil`                                   |
+| `WILDFLY_USERNAME`                  | WildFly admin username.                                                                       | `user`                                  |
+| `WILDFLY_PASSWORD`                  | WildFly admin user password.                                                                  | `nil`                                   |
+| `JAVA_HOME`                         | Java Home directory.                                                                          | `${BITNAMI_ROOT_DIR}/java`              |
+| `JAVA_OPTS`                         | Java options.                                                                                 | `nil`                                   |
 
 #### Read-only environment variables
 
@@ -193,6 +201,10 @@ $ docker exec -it wildfly-server \
 | `WILDFLY_CONF_DIR`                          | WildFly server configuration directory.                                          | `${WILDFLY_BASE_DIR}/standalone/configuration` |
 | `WILDFLY_LOGS_DIR`                          | WildFly directory for log files.                                                 | `${WILDFLY_BASE_DIR}/standalone/log`           |
 | `WILDFLY_TMP_DIR`                           | WildFly directory for runtime temporary files.                                   | `${WILDFLY_BASE_DIR}/standalone/tmp`           |
+| `WILDFLY_DOMAIN_DIR`                        | Wildfly domain directory.                                                        | `${WILDFLY_BASE_DIR}/domain`                   |
+| `WILDFLY_STANDALONE_DIR`                    | Wildfly standalone directory.                                                    | `${WILDFLY_BASE_DIR}/standalone`               |
+| `WILDFLY_DEFAULT_DOMAIN_DIR`                | Wildfly default domain directory.                                                | `${WILDFLY_BASE_DIR}/domain.default`           |
+| `WILDFLY_DEFAULT_STANDALONE_DIR`            | Wildfly default standalone directory.                                            | `${WILDFLY_BASE_DIR}/standalone.default`       |
 | `WILDFLY_PID_FILE`                          | Path to the WildFly PID file.                                                    | `${WILDFLY_TMP_DIR}/wildfly.pid`               |
 | `WILDFLY_VOLUME_DIR`                        | WildFly directory for mounted configuration files.                               | `${BITNAMI_VOLUME_DIR}/wildfly`                |
 | `WILDFLY_DAEMON_USER`                       | WildFly system user.                                                             | `wildfly`                                      |
@@ -200,6 +212,7 @@ $ docker exec -it wildfly-server \
 | `WILDFLY_DEFAULT_SERVER_LISTEN_ADDRESS`     | Default WildFLY SERVER listen address to enable at build time.                   | `0.0.0.0`                                      |
 | `WILDFLY_DEFAULT_MANAGEMENT_LISTEN_ADDRESS` | Default WildFLY MANAGEMENT listen address to enable at build time.               | `127.0.0.1`                                    |
 | `WILDFLY_DEFAULT_HTTP_PORT_NUMBER`          | Default WildFLY HTTP port number to enable at build time.                        | `8080`                                         |
+| `WILDFLY_DEFAULT_HTTPS_PORT_NUMBER`         | Default WildFLY HTTPS port number to enable at build time.                       | `8443`                                         |
 | `WILDFLY_DEFAULT_AJP_PORT_NUMBER`           | Default WildFLY AJP port number to enable at build time.                         | `8009`                                         |
 | `WILDFLY_DEFAULT_MANAGEMENT_PORT_NUMBER`    | Default WildFLY MANAGEMENT port number to enable at build time.                  | `9990`                                         |
 | `LAUNCH_JBOSS_IN_BACKGROUND`                | Ensure signals are forwarded to the JVM process correctly for graceful shutdown. | `true`                                         |

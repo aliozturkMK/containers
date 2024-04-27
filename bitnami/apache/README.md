@@ -21,7 +21,7 @@ You can find the available configuration options in the [Environment Variables](
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Apache in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -121,31 +121,32 @@ Access your web server in the browser by navigating to `http://localhost:8080/`.
 
 #### Customizable environment variables
 
-| Name                   | Description                    | Default Value |
-|------------------------|--------------------------------|---------------|
-| `APACHE_SERVER_TOKENS` | Apache ServerTokens directive. | `Prod`        |
+| Name                       | Description                       | Default Value |
+|----------------------------|-----------------------------------|---------------|
+| `APACHE_HTTP_PORT_NUMBER`  | HTTP port number used by Apache.  | `nil`         |
+| `APACHE_HTTPS_PORT_NUMBER` | HTTPS port number used by Apache. | `nil`         |
+| `APACHE_SERVER_TOKENS`     | Apache ServerTokens directive.    | `Prod`        |
 
 #### Read-only environment variables
 
-| Name                               | Description                                               | Value                           |
-|------------------------------------|-----------------------------------------------------------|---------------------------------|
-| `WEB_SERVER_TYPE`                  | Web server type                                           | `apache`                        |
-| `APACHE_BASE_DIR`                  | Apache installation directory.                            | `${BITNAMI_ROOT_DIR}/apache`    |
-| `APACHE_BIN_DIR`                   | Apache directory for binary executables.                  | `${APACHE_BASE_DIR}/bin`        |
-| `APACHE_CONF_DIR`                  | Apache configuration directory.                           | `${APACHE_BASE_DIR}/conf`       |
-| `APACHE_HTDOCS_DIR`                | Directory containing HTTP files to serve via Apache.      | `${APACHE_BASE_DIR}/htdocs`     |
-| `APACHE_TMP_DIR`                   | Apache directory for runtime temporary files.             | `${APACHE_BASE_DIR}/var/run`    |
-| `APACHE_LOGS_DIR`                  | Apache directory for logs.                                | `${APACHE_BASE_DIR}/logs`       |
-| `APACHE_VHOSTS_DIR`                | Apache directory for virtual hosts.                       | `${APACHE_CONF_DIR}/vhosts`     |
-| `APACHE_HTACCESS_DIR`              | Apache directory for htaccess files.                      | `${APACHE_VHOSTS_DIR}/htaccess` |
-| `APACHE_CONF_FILE`                 | Path to the Apache configuration.                         | `${APACHE_CONF_DIR}/httpd.conf` |
-| `APACHE_PID_FILE`                  | Path to the Apache PID file.                              | `${APACHE_TMP_DIR}/httpd.pid`   |
-| `APACHE_DAEMON_USER`               | Apache system user.                                       | `daemon`                        |
-| `APACHE_DAEMON_GROUP`              | Apache system group.                                      | `daemon`                        |
-| `APACHE_DEFAULT_HTTP_PORT_NUMBER`  | Default Apache HTTP port number to enable at build time.  | `8080`                          |
-| `APACHE_DEFAULT_HTTP_PORT_NUMBER`  | Default Apache HTTP port number to enable at build time.  | `80`                            |
-| `APACHE_DEFAULT_HTTPS_PORT_NUMBER` | Default Apache HTTPS port number to enable at build time. | `8443`                          |
-| `APACHE_DEFAULT_HTTPS_PORT_NUMBER` | Default Apache HTTPS port number to enable at build time. | `443`                           |
+| Name                               | Description                                               | Value                             |
+|------------------------------------|-----------------------------------------------------------|-----------------------------------|
+| `WEB_SERVER_TYPE`                  | Web server type                                           | `apache`                          |
+| `APACHE_BASE_DIR`                  | Apache installation directory.                            | `${BITNAMI_ROOT_DIR}/apache`      |
+| `APACHE_BIN_DIR`                   | Apache directory for binary executables.                  | `${APACHE_BASE_DIR}/bin`          |
+| `APACHE_CONF_DIR`                  | Apache configuration directory.                           | `${APACHE_BASE_DIR}/conf`         |
+| `APACHE_DEFAULT_CONF_DIR`          | Apache default configuration directory.                   | `${APACHE_BASE_DIR}/conf.default` |
+| `APACHE_HTDOCS_DIR`                | Directory containing HTTP files to serve via Apache.      | `${APACHE_BASE_DIR}/htdocs`       |
+| `APACHE_TMP_DIR`                   | Apache directory for runtime temporary files.             | `${APACHE_BASE_DIR}/var/run`      |
+| `APACHE_LOGS_DIR`                  | Apache directory for logs.                                | `${APACHE_BASE_DIR}/logs`         |
+| `APACHE_VHOSTS_DIR`                | Apache directory for virtual hosts.                       | `${APACHE_CONF_DIR}/vhosts`       |
+| `APACHE_HTACCESS_DIR`              | Apache directory for htaccess files.                      | `${APACHE_VHOSTS_DIR}/htaccess`   |
+| `APACHE_CONF_FILE`                 | Path to the Apache configuration.                         | `${APACHE_CONF_DIR}/httpd.conf`   |
+| `APACHE_PID_FILE`                  | Path to the Apache PID file.                              | `${APACHE_TMP_DIR}/httpd.pid`     |
+| `APACHE_DAEMON_USER`               | Apache system user.                                       | `daemon`                          |
+| `APACHE_DAEMON_GROUP`              | Apache system group.                                      | `daemon`                          |
+| `APACHE_DEFAULT_HTTP_PORT_NUMBER`  | Default Apache HTTP port number to enable at build time.  | `8080`                            |
+| `APACHE_DEFAULT_HTTPS_PORT_NUMBER` | Default Apache HTTPS port number to enable at build time. | `8443`                            |
 
 When you start the Apache image, you can adjust the configuration of the instance by passing one or more environment variables either on the docker-compose file or on the `docker run` command line. If you want to add a new environment variable:
 

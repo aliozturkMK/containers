@@ -21,7 +21,7 @@ You can find the default credentials and available configuration options in the 
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Apache Cassandra in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -178,14 +178,18 @@ docker-compose up -d
 | `CASSANDRA_ENABLE_USER_DEFINED_FUNCTIONS`          | Enable user defined functions.                                                          | `false`                                      |
 | `CASSANDRA_ENABLE_SCRIPTED_USER_DEFINED_FUNCTIONS` | Enable scripted user defined functions.                                                 | `false`                                      |
 | `CASSANDRA_ENDPOINT_SNITCH`                        | Name of the cluster endpoint snitch.                                                    | `SimpleSnitch`                               |
+| `CASSANDRA_HOST`                                   | Cassandra host name.                                                                    | `nil`                                        |
 | `CASSANDRA_INTERNODE_ENCRYPTION`                   | Internode encryption type.                                                              | `none`                                       |
 | `CASSANDRA_NUM_TOKENS`                             | Number of tokens in cluster connection.                                                 | `256`                                        |
 | `CASSANDRA_PASSWORD_SEEDER`                        | Set the node as password seeder in the clustre.                                         | `no`                                         |
 | `CASSANDRA_SEEDS`                                  | List of cluster seeds.                                                                  | `$CASSANDRA_HOST`                            |
 | `CASSANDRA_PEERS`                                  | List of cluster peers.                                                                  | `$CASSANDRA_SEEDS`                           |
 | `CASSANDRA_PEERS`                                  | List of cluster peers.                                                                  | `$CASSANDRA_SEEDS`                           |
+| `CASSANDRA_NODES`                                  | List of cluster nodes (seeders and non seeders)                                         | `nil`                                        |
 | `CASSANDRA_RACK`                                   | Cassandra rack name.                                                                    | `rack1`                                      |
+| `CASSANDRA_BROADCAST_ADDRESS`                      | Node broadcast address.                                                                 | `nil`                                        |
 | `CASSANDRA_AUTOMATIC_SSTABLE_UPGRADE`              | Automatically upgrade sstables after upgrade.                                           | `false`                                      |
+| `CASSANDRA_STARTUP_CQL`                            | Startup CQL commands to run at boot.                                                    | `nil`                                        |
 | `CASSANDRA_IGNORE_INITDB_SCRIPTS`                  | Ignore the execution of init scripts                                                    | `no`                                         |
 | `CASSANDRA_CQL_PORT_NUMBER`                        | CQL port.                                                                               | `9042`                                       |
 | `CASSANDRA_JMX_PORT_NUMBER`                        | JMX port.                                                                               | `7199`                                       |
@@ -202,6 +206,7 @@ docker-compose up -d
 | `CASSANDRA_AUTHORIZER`                             | Cassandra connection authorizer.                                                        | `CassandraAuthorizer`                        |
 | `CASSANDRA_AUTHENTICATOR`                          | Cassandra connection authenticator.                                                     | `PasswordAuthenticator`                      |
 | `CASSANDRA_USER`                                   | Cassandra username.                                                                     | `cassandra`                                  |
+| `CASSANDRA_PASSWORD`                               | Cassandra password.                                                                     | `nil`                                        |
 | `CASSANDRA_KEYSTORE_PASSWORD`                      | Cassandra keystore password.                                                            | `cassandra`                                  |
 | `CASSANDRA_TRUSTSTORE_PASSWORD`                    | Cassandra truststore password.                                                          | `cassandra`                                  |
 | `CASSANDRA_KEYSTORE_LOCATION`                      | Cassandra keystore location.                                                            | `${CASSANDRA_VOLUME_DIR}/secrets/keystore`   |
@@ -239,8 +244,9 @@ Additionally, any environment variable beginning with the following prefix will 
 * `CASSANDRA_CFG_ENV_`: Will add the corresponding key and the provided value to `cassandra-env.sh`.
 * `CASSANDRA_CFG_RACKDC_`: Will add the corresponding key and the provided value to `cassandra-rackdc.properties`.
 * `CASSANDRA_CFG_COMMITLOG_`: Will add the corresponding key and the provided value to `commitlog_archiving.properties`.
+* `CASSANDRA_CFG_YAML_`: Will add the corresponding key and the provided value to `cassandra.yaml`.
 
-For example, use `CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true` in order to configure `prefer_local` in `cassandra-rackdc.properties`.
+For example, use `CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true` in order to configure `prefer_local` in `cassandra-rackdc.properties`. Or, use `CASSANDRA_CFG_YAML_INTERNODE_COMPRESSION=all` in order to set `internode_compression` to `all` in `cassandra.yaml`.
 
 **NOTE:** Environment variables will be omitted when mounting a configuration file
 
