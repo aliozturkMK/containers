@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 # shellcheck disable=SC1091
@@ -11,13 +11,6 @@ set -o pipefail
 
 # Load Airflow environment variables
 . /opt/bitnami/scripts/airflow-env.sh
-
-# Load PostgreSQL Client environment for 'postgresql_remote_execute' (after 'airflow-env.sh' so that MODULE is not set to a wrong value)
-if [[ -f /opt/bitnami/scripts/postgresql-client-env.sh ]]; then
-    . /opt/bitnami/scripts/postgresql-client-env.sh
-elif [[ -f /opt/bitnami/scripts/postgresql-env.sh ]]; then
-    . /opt/bitnami/scripts/postgresql-env.sh
-fi
 
 # Load libraries
 . /opt/bitnami/scripts/libos.sh

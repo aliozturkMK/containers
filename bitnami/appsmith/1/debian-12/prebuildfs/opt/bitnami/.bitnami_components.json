@@ -3,48 +3,42 @@
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "1.22.1-0"
+        "version": "1.67.0-0"
     },
-    "java": {
+    "jre": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "17.0.11-10-0"
+        "version": "17.0.14-10-1"
     },
     "mongodb-shell": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "2.2.5-0"
+        "version": "2.5.0-1"
     },
     "nginx": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "1.25.5-0"
+        "version": "1.27.4-5"
     },
     "node": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "20.12.2-1"
+        "version": "20.19.0-1"
     },
     "python": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "3.11.9-7"
+        "version": "3.13.3-0"
     },
     "render-template": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "1.0.6-11"
-    },
-    "wait-for-port": {
-        "arch": "amd64",
-        "distro": "debian-12",
-        "type": "NAMI",
-        "version": "1.0.7-11"
+        "version": "1.0.7-15"
     }
 }

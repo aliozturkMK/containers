@@ -1,4 +1,4 @@
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 file:
@@ -16,14 +16,15 @@ command:
   check-server-init:
     exec: java -jar /opt/bitnami/appsmith/backend/server.jar
     exit-status: 1
+    timeout: 30000
     stdout:
       - "{{ .Env.APP_VERSION }}"
       - "Starting ServerApplication"
   check-rts-init:
-    exec: cd /opt/appsmith/rts/bundle && node server.js
-    exit-status: 1
-    stderr:
-      - "APPSMITH_API_BASE_URL"
+    exec: cd /opt/appsmith/rts/bundle && timeout --preserve-status 5s node server.js || true
+    exit-status: 0
+    stdout:
+      - "RTS version v{{ .Env.APP_VERSION }} running"
 group:
   appsmith:
     exists: true

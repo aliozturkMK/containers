@@ -1,4 +1,4 @@
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 file:
@@ -7,6 +7,11 @@ file:
     exists: false
   /opt/bitnami/kafka/conf:
     exists: false
+  {{ if regexMatch "^4.+" .Env.APP_VERSION }}
+  /opt/bitnami/kafka/config/log4j2.yaml:
+    exists: true
+    filetype: file
+  {{ else }}
   /opt/bitnami/kafka/config/log4j.properties:
     exists: true
     filetype: file
@@ -16,8 +21,15 @@ file:
       - "ConsoleAppender"
       - "!DatePattern"
       - "!Appender.File"
+  {{ end }}
   /opt/bitnami/kafka/bin/kafka-server-start.sh:
     exists: true
     filetype: file
     contents:
       - "![-]loggc"
+{{ if not (regexMatch "^4.+" .Env.APP_VERSION) }}
+command:
+  check-wait-for-port-binary:
+    exec: which wait-for-port
+    exit-status: 0
+{{ end }}

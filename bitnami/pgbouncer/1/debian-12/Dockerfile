@@ -1,21 +1,21 @@
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 FROM docker.io/bitnami/minideb:bookworm
 
+ARG DOWNLOADS_URL="downloads.bitnami.com/files/stacksmith"
 ARG TARGETARCH
 
 LABEL com.vmware.cp.artifact.flavor="sha256:c50c90cfd9d12b445b011e6ad529f1ad3daea45c26d20b00732fae3cd71f6a83" \
       org.opencontainers.image.base.name="docker.io/bitnami/minideb:bookworm" \
-      org.opencontainers.image.created="2024-04-23T18:50:56Z" \
-      org.opencontainers.image.description="Application packaged by VMware, Inc" \
+      org.opencontainers.image.created="2025-04-07T14:30:54Z" \
+      org.opencontainers.image.description="Application packaged by Broadcom, Inc." \
       org.opencontainers.image.documentation="https://github.com/bitnami/containers/tree/main/bitnami/pgbouncer/README.md" \
-      org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.ref.name="1.22.1-debian-12-r3" \
+      org.opencontainers.image.ref.name="1.24.0-debian-12-r9" \
       org.opencontainers.image.source="https://github.com/bitnami/containers/tree/main/bitnami/pgbouncer" \
       org.opencontainers.image.title="pgbouncer" \
-      org.opencontainers.image.vendor="VMware, Inc." \
-      org.opencontainers.image.version="1.22.1"
+      org.opencontainers.image.vendor="Broadcom, Inc." \
+      org.opencontainers.image.version="1.24.0"
 
 ENV HOME="/" \
     OS_ARCH="${TARGETARCH:-amd64}" \
@@ -26,20 +26,20 @@ COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
 RUN install_packages ca-certificates curl libaudit1 libbsd0 libc-ares2 libcap-ng0 libedit2 libevent-2.1-7 libffi8 libgcc-s1 libgmp10 libgnutls30 libhogweed6 libicu72 libidn2-0 libldap-2.5-0 liblzma5 libmd0 libnettle8 libp11-kit0 libpam0g libsasl2-2 libssl3 libstdc++6 libtasn1-6 libtinfo6 libunistring2 libuuid1 libxml2 libxslt1.1 locales procps zlib1g
-RUN mkdir -p /tmp/bitnami/pkg/cache/ ; cd /tmp/bitnami/pkg/cache/ ; \
+RUN mkdir -p /tmp/bitnami/pkg/cache/ ; cd /tmp/bitnami/pkg/cache/ || exit 1 ; \
     COMPONENTS=( \
-      "wait-for-port-1.0.7-11-linux-${OS_ARCH}-debian-12" \
-      "postgresql-client-14.11.0-2-linux-${OS_ARCH}-debian-12" \
-      "ini-file-1.4.6-11-linux-${OS_ARCH}-debian-12" \
-      "pgbouncer-1.22.1-1-linux-${OS_ARCH}-debian-12" \
+      "wait-for-port-1.0.8-15-linux-${OS_ARCH}-debian-12" \
+      "postgresql-client-14.17.0-0-linux-${OS_ARCH}-debian-12" \
+      "ini-file-1.4.7-15-linux-${OS_ARCH}-debian-12" \
+      "pgbouncer-1.24.0-1-linux-${OS_ARCH}-debian-12" \
     ) ; \
     for COMPONENT in "${COMPONENTS[@]}"; do \
       if [ ! -f "${COMPONENT}.tar.gz" ]; then \
-        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz" -O ; \
-        curl -SsLf "https://downloads.bitnami.com/files/stacksmith/${COMPONENT}.tar.gz.sha256" -O ; \
+        curl -SsLf "https://${DOWNLOADS_URL}/${COMPONENT}.tar.gz" -O ; \
+        curl -SsLf "https://${DOWNLOADS_URL}/${COMPONENT}.tar.gz.sha256" -O ; \
       fi ; \
       sha256sum -c "${COMPONENT}.tar.gz.sha256" ; \
-      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' ; \
+      tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner ; \
       rm -rf "${COMPONENT}".tar.gz{,.sha256} ; \
     done
 RUN apt-get autoremove --purge -y curl && \
@@ -55,7 +55,7 @@ RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 COPY rootfs /
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
 RUN /opt/bitnami/scripts/pgbouncer/postunpack.sh
-ENV APP_VERSION="1.22.1" \
+ENV APP_VERSION="1.24.0" \
     BITNAMI_APP_NAME="pgbouncer" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \

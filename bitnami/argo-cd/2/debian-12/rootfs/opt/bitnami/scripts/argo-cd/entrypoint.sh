@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 # shellcheck disable=SC1091
@@ -15,6 +15,11 @@ set -o pipefail
 . /opt/bitnami/scripts/libos.sh
 
 print_welcome_page
+
+# Load REDIS_PASSWORD from a file when provided
+if [[ -n "${REDIS_PASSWORD_FILE:-}" ]]; then
+  export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+fi
 
 # Set nss_wrapper vars only when running as non-root
 # Configure libnss_wrapper based on the UID/GID used to run the container

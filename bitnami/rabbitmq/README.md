@@ -24,7 +24,7 @@ You can find the default credentials and available configuration options in the 
 * All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
-Looking to use RabbitMQ in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
+Looking to use RabbitMQ in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the commercial edition of the Bitnami catalog.
 
 ## How to deploy RabbitMQ in Kubernetes?
 
@@ -34,11 +34,17 @@ Bitnami containers can be used with [Kubeapps](https://kubeapps.dev/) for deploy
 
 ## Why use a non-root container?
 
-Non-root container images add an extra layer of security and are generally recommended for production environments. However, because they run as a non-root user, privileged tasks are typically off-limits. Learn more about non-root containers [in our docs](https://docs.bitnami.com/tutorials/work-with-non-root-containers/).
+Non-root container images add an extra layer of security and are generally recommended for production environments. However, because they run as a non-root user, privileged tasks are typically off-limits. Learn more about non-root containers [in our docs](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-work-with-non-root-containers-index.html).
+
+## Only latest stable branch maintained in the free Bitnami catalog
+
+Starting December 10th 2024, only the latest stable branch of any container will receive updates in the free Bitnami catalog. To access up-to-date releases for all upstream-supported branches, consider upgrading to Bitnami Premium. Previous versions already released will not be deleted. They are still available to pull from DockerHub.
+
+Please check the Bitnami Premium page in our partner [Arrow Electronics](https://www.arrow.com/globalecs/na/vendors/bitnami?utm_source=GitHub&utm_medium=containers) for more information.
 
 ## Supported tags and respective `Dockerfile` links
 
-Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://docs.bitnami.com/tutorials/understand-rolling-tags-containers/).
+Learn more about the Bitnami tagging policy and the difference between rolling tags and immutable tags [in our documentation page](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html).
 
 You can see the equivalence between the different tags by taking a look at the `tags-info.yaml` file present in the branch folder, i.e `bitnami/ASSET/BRANCH/DISTRO/tags-info.yaml`.
 
@@ -160,6 +166,7 @@ docker-compose up -d
 | `RABBITMQ_CONF_FILE`                           | RabbitMQ configuration file.                                                                                                                                                                     | `${RABBITMQ_CONF_DIR}/rabbitmq.conf` |
 | `RABBITMQ_DEFINITIONS_FILE`                    | Whether to load external RabbitMQ definitions. This is incompatible with setting the RabbitMQ password securely.                                                                                 | `/app/load_definition.json`          |
 | `RABBITMQ_SECURE_PASSWORD`                     | Whether to set the RabbitMQ password securely. This is incompatible with loading external RabbitMQ definitions.                                                                                  | `no`                                 |
+| `RABBITMQ_UPDATE_PASSWORD`                     | Whether to update the password on container restart.                                                                                                                                             | `no`                                 |
 | `RABBITMQ_CLUSTER_NODE_NAME`                   | RabbitMQ cluster node name. When specifying this, ensure you also specify a valid hostname as RabbitMQ will fail to start otherwise.                                                             | `nil`                                |
 | `RABBITMQ_CLUSTER_PARTITION_HANDLING`          | RabbitMQ cluster partition recovery mechanism.                                                                                                                                                   | `ignore`                             |
 | `RABBITMQ_DISK_FREE_RELATIVE_LIMIT`            | Disk relative free space limit of the partition on which RabbitMQ is storing data.                                                                                                               | `1.0`                                |
@@ -190,6 +197,7 @@ docker-compose up -d
 | `RABBITMQ_SSL_CACERTFILE`                      | Path to the RabbitMQ server SSL CA certificate file.                                                                                                                                             | `nil`                                |
 | `RABBITMQ_SSL_CERTFILE`                        | Path to the RabbitMQ server SSL certificate file.                                                                                                                                                | `nil`                                |
 | `RABBITMQ_SSL_KEYFILE`                         | Path to the RabbitMQ server SSL certificate key file.                                                                                                                                            | `nil`                                |
+| `RABBITMQ_SSL_PASSWORD`                        | RabbitMQ server SSL certificate key password.                                                                                                                                                    | `nil`                                |
 | `RABBITMQ_SSL_DEPTH`                           | Maximum number of non-self-issued intermediate certificates that may follow the peer certificate in a valid certification path.                                                                  | `nil`                                |
 | `RABBITMQ_SSL_FAIL_IF_NO_PEER_CERT`            | Whether to reject TLS connections if client fails to provide a certificate.                                                                                                                      | `no`                                 |
 | `RABBITMQ_SSL_VERIFY`                          | Whether to enable peer SSL certificate verification. Valid values: verify_none, verify_peer.                                                                                                     | `verify_none`                        |
@@ -197,6 +205,7 @@ docker-compose up -d
 | `RABBITMQ_MANAGEMENT_SSL_CACERTFILE`           | Path to the RabbitMQ management server SSL CA certificate file.                                                                                                                                  | `$RABBITMQ_SSL_CACERTFILE`           |
 | `RABBITMQ_MANAGEMENT_SSL_CERTFILE`             | Path to the RabbitMQ server SSL certificate file.                                                                                                                                                | `$RABBITMQ_SSL_CERTFILE`             |
 | `RABBITMQ_MANAGEMENT_SSL_KEYFILE`              | Path to the RabbitMQ management server SSL certificate key file.                                                                                                                                 | `$RABBITMQ_SSL_KEYFILE`              |
+| `RABBITMQ_MANAGEMENT_SSL_PASSWORD`             | RabbitMQ management server SSL certificate key password.                                                                                                                                         | `$RABBITMQ_SSL_PASSWORD`             |
 | `RABBITMQ_MANAGEMENT_SSL_DEPTH`                | Maximum number of non-self-issued intermediate certificates that may follow the peer certificate in a valid certification path, for the RabbitMQ management server.                              | `nil`                                |
 | `RABBITMQ_MANAGEMENT_SSL_FAIL_IF_NO_PEER_CERT` | Whether to reject TLS connections if client fails to provide a certificate for the RabbitMQ management server.                                                                                   | `yes`                                |
 | `RABBITMQ_MANAGEMENT_SSL_VERIFY`               | Whether to enable peer SSL certificate verification for the RabbitMQ management server. Valid values: verify_none, verify_peer.                                                                  | `verify_peer`                        |
@@ -592,7 +601,7 @@ If you encountered a problem running this container, you can file an [issue](htt
 
 ## License
 
-Copyright &copy; 2024 Broadcom. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
+Copyright &copy; 2025 Broadcom. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

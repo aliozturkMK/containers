@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 #
 # Bitnami Matomo library
@@ -82,7 +82,7 @@ matomo_validate() {
         is_empty_value "$MATOMO_SMTP_PORT_NUMBER" && print_validation_error "The MATOMO_SMTP_PORT_NUMBER environment variable is empty or not set."
         ! is_empty_value "$MATOMO_SMTP_PORT_NUMBER" && check_valid_port "MATOMO_SMTP_PORT_NUMBER"
         ! is_empty_value "$MATOMO_SMTP_PROTOCOL" && check_multi_value "MATOMO_SMTP_PROTOCOL" "ssl tls none"
-        ! is_empty_value "$MATOMO_SMTP_AUTH" && check_multi_value "MATOMO_SMTP_AUTH" "Plain Login Crammd5"
+        ! is_empty_value "$MATOMO_SMTP_AUTH" && check_multi_value "MATOMO_SMTP_AUTH" "Plain Login Cram-md5"
     fi
 
     # Check that the web server is properly set up
@@ -218,7 +218,13 @@ EOF
     else
         info "Persisted Matomo installation detected"
         info "Updating Matomo files in persisted data"
-        rsync -a "$MATOMO_BASE_DIR"/* "$MATOMO_VOLUME_DIR" --exclude "$(realpath --relative-to="$MATOMO_BASE_DIR" "$MATOMO_CONF_FILE")"
+        rsync_args=("-a" "$MATOMO_BASE_DIR"/* "$MATOMO_VOLUME_DIR" "--exclude" "$(realpath --relative-to="$MATOMO_BASE_DIR" "$MATOMO_CONF_FILE")")
+        read -r -a extra_excluded_data <<< "$(tr ',;:' ' ' <<< "$MATOMO_EXCLUDED_DATA_FROM_UPDATE")"
+        for file in "${extra_excluded_data[@]}"; do
+            rsync_args+=("--exclude")
+            rsync_args+=("$(realpath --relative-to="$MATOMO_BASE_DIR" "$file")")
+        done
+        rsync "${rsync_args[@]}"
         info "Restoring Matomo installation"
         restore_persisted_app "$app_name" "$MATOMO_DATA_TO_PERSIST"
         info "Trying to connect to the database server"

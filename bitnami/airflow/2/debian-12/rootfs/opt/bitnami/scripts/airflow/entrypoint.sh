@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 # shellcheck disable=SC1091
@@ -36,7 +36,6 @@ fi
 
 if [[ "$*" = *"/opt/bitnami/scripts/airflow/run.sh"* || "$*" = *"/run.sh"* ]]; then
     info "** Starting Airflow setup **"
-    /opt/bitnami/scripts/postgresql-client/setup.sh
     /opt/bitnami/scripts/airflow/setup.sh
     info "** Airflow setup finished! **"
 fi

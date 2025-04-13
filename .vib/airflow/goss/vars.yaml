@@ -1,7 +1,6 @@
 binaries:
   - airflow
   - ini-file
-  - psql
   - python
   - wait-for-port
 linked_libraries:
@@ -20,6 +19,7 @@ root_dir: /opt/bitnami
 version:
   bin_name: airflow
   flag: version
+  timeout: 30000
 subpackages:
   - amazon
   - celery

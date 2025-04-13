@@ -3,42 +3,42 @@
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "1.1.0-2"
+        "version": "1.1.0-6"
     },
     "discourse": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "3.2.1-0"
+        "version": "3.4.2-3"
     },
     "node": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "18.20.2-0"
+        "version": "20.19.0-1"
     },
     "postgresql-client": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "16.2.0-2"
+        "version": "17.4.0-0"
     },
     "python": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "3.11.9-3"
+        "version": "3.12.10-2"
     },
     "ruby": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "3.2.3-3"
+        "version": "3.2.8-0"
     },
     "wait-for-port": {
         "arch": "amd64",
         "distro": "debian-12",
         "type": "NAMI",
-        "version": "1.0.7-11"
+        "version": "1.0.8-15"
     }
 }

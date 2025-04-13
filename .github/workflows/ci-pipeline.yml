@@ -43,8 +43,8 @@ jobs:
           if [[ "$non_readme_files" -le "0" ]]; then
             # The only changes are .md files -> SKIP
             echo "result=skip" >> $GITHUB_OUTPUT
-          elif [[ "${#assets[@]}" -ne "1" ]]; then
-            echo "Changes should affect to only one asset. You are currently modifying: ${assets[@]}"
+          elif [[ "${#assets[@]}" -ge "5" ]]; then
+            echo "Maximun number of assets reached. You are currently modifying: ${assets[@]}"
             echo "result=skip" >> $GITHUB_OUTPUT
           else
             containers_json=$(printf "%s\n" "${flavors[@]}" | jq -R . | jq -cs .)
@@ -61,7 +61,7 @@ jobs:
       pull-requests: write
     needs: get-containers
     steps:
-      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         name: Checkout Repository
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -79,7 +79,7 @@ jobs:
             echo "result=skip" >> $GITHUB_OUTPUT
           fi
       - name: Check license Headers
-        uses: apache/skywalking-eyes/header@cd7b195c51fd3d6ad52afceb760719ddc6b3ee91
+        uses: apache/skywalking-eyes/header@5c5b974209f0de5d905f37deb69369068ebfc15c
         if: ${{ steps.get-modified-files.outputs.result == 'success' }}
   vib-verify:
     runs-on: ubuntu-latest
@@ -89,10 +89,10 @@ jobs:
       needs.get-containers.outputs.result == 'ok' &&
       github.event.pull_request.user.login != 'bitnami-bot'
     name: VIB Verify
-    permissions: 
+    permissions:
       contents: read
     env:
-      CSP_API_URL: https://console.cloud.vmware.com
+      CSP_API_URL: https://console.tanzu.broadcom.com
       CSP_API_TOKEN: ${{ secrets.CSP_API_TOKEN }}
       VIB_PUBLIC_URL: https://cp.bromelia.vmware.com
     continue-on-error: false
@@ -102,7 +102,7 @@ jobs:
       matrix:
         container: ${{ fromJSON(needs.get-containers.outputs.containers) }}
     steps:
-      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         name: Checkout Repository
         with:
           # Full history is not required anymore

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 #
 # Environment configuration for solr
@@ -43,6 +43,8 @@ solr_env_vars=(
     SOLR_CORE_CONF_DIR
     SOLR_SSL_ENABLED
     SOLR_SSL_CHECK_PEER_NAME
+    SOLR_SSL_KEY_STORE_PASSWORD
+    SOLR_SSL_TRUST_STORE_PASSWORD
     SOLR_ZK_MAX_RETRIES
     SOLR_ZK_SLEEP_TIME
     SOLR_ZK_CHROOT
@@ -99,6 +101,8 @@ export SOLR_CLOUD_BOOTSTRAP="${SOLR_CLOUD_BOOTSTRAP:-no}"
 export SOLR_CORE_CONF_DIR="${SOLR_CORE_CONF_DIR:-${SOLR_SERVER_DIR}/solr/configsets/_default/conf}"
 export SOLR_SSL_ENABLED="${SOLR_SSL_ENABLED:-no}"
 export SOLR_SSL_CHECK_PEER_NAME="${SOLR_SSL_CHECK_PEER_NAME:-false}"
+export SOLR_SSL_KEY_STORE_PASSWORD="${SOLR_SSL_KEY_STORE_PASSWORD:-}"
+export SOLR_SSL_TRUST_STORE_PASSWORD="${SOLR_SSL_TRUST_STORE_PASSWORD:-}"
 
 # System users (when running with a privileged user)
 export SOLR_DAEMON_USER="solr"
@@ -109,5 +113,6 @@ export SOLR_ZK_MAX_RETRIES="${SOLR_ZK_MAX_RETRIES:-5}"
 export SOLR_ZK_SLEEP_TIME="${SOLR_ZK_SLEEP_TIME:-5}"
 export SOLR_ZK_CHROOT="${SOLR_ZK_CHROOT:-/solr}"
 export SOLR_ZK_HOSTS="${SOLR_ZK_HOSTS:-}"
+export SOLR_ZK_CONNECTION_TIMEOUT="10"
 
 # Custom environment variables may be defined below

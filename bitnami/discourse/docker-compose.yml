@@ -1,10 +1,9 @@
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
-version: '2'
 services:
   postgresql:
-    image: docker.io/bitnami/postgresql:16
+    image: docker.io/bitnami/postgresql:latest
     volumes:
       - 'postgresql_data:/bitnami/postgresql'
     environment:
@@ -13,7 +12,7 @@ services:
       - POSTGRESQL_USERNAME=bn_discourse
       - POSTGRESQL_DATABASE=bitnami_discourse
   redis:
-    image: docker.io/bitnami/redis:7.0
+    image: docker.io/bitnami/redis:latest
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
@@ -46,7 +45,7 @@ services:
     depends_on:
       - discourse
     volumes:
-      - 'sidekiq_data:/bitnami/discourse'
+      - 'discourse_data:/bitnami/discourse'
     command: /opt/bitnami/scripts/discourse-sidekiq/run.sh
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
@@ -64,6 +63,4 @@ volumes:
   redis_data:
     driver: local
   discourse_data:
-    driver: local
-  sidekiq_data:
     driver: local

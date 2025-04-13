@@ -85,7 +85,8 @@ This guide will focus on the `verify` phase section, of which there are some thi
 
 * A container's testing phase will usually include a single `goss` testing action, followed by additional security-related actions.
 
-> NOTE: Some containers with per-branch ARM support use separate per-branch `vib-verify.json` pipelines. Remember to replicate changes performed on the main pipeline definition file to those pipelines.
+> [!NOTE]
+> Some containers with per-branch ARM support use separate per-branch `vib-verify.json` pipelines. Remember to replicate changes performed on the main pipeline definition file to those pipelines.
 
 ## Testing strategy
 
@@ -133,6 +134,7 @@ For your test code PR to be accepted the following criteria must be fulfilled:
 
 For VIB to execute GOSS tests, the following block of code needs to be defined in the corresponding [VIB pipeline definition file](#vib-pipeline-definition-file) (`/.vib/app/vib-verify.json`).
 
+> [!NOTE]
 > Values denoted withing dollar signs (`$$VALUE$$`) should be treated as placeholders
 
 ```json
@@ -255,24 +257,78 @@ Not every suite will be composed of the same tests, as it will depend on the typ
 Sometimes it is of interest to run the tests locally, for example during development. Though there may be different approaches, you may follow the steps below to execute the tests locally:
 
 1. Download the [GOSS binary for Linux](https://github.com/goss-org/goss/releases/)
+2. Launch the container using some command that ensures it will not exit immediately.
 
-2. Add the binary and test files to the tested container as volumes
+    Using a "bash" container, you can use the Docker Compose file below:
 
-    ```bash
-    $ docker run -d -it bitnami/app_name bash -c "tail -f /dev/null"
-    e696196fba
-
-    $ docker cp /local/path/to/binary/goss-linux-amd64 e6961:/usr/local/bin/gossctl
-    $ docker cp /local/path/to/repo/containers/.vib e6961:/goss
+    ```yaml
+    services:
+      main:
+        image: bitnami/app_name
+        entrypoint:
+        - bash
+        command:
+        - -c
+        - "tail -f /dev/null"
+        volumes:
+        - /local/path/to/repo/containers/.vib:/shared
     ```
 
-3. Grant execution permissions to the binary and launch the tests
+    Using a scratch container, you can use the Docker Compose file below:
+
+    ```yaml
+    services:
+      copy-busybox:
+        image: us-east1-docker.pkg.dev/bitnami-labs/bitnami-labs/minideb-busybox:latest
+        entrypoint:
+        - bash
+        command:
+        - -ec
+        - |
+          echo "Copying busybox to /tools/busybox"
+          cp /usr/bin/busybox /tools/busybox
+          sync
+          echo "Sleeping for 10 seconds to ensure health check passes"
+          sleep 10
+          echo "Done"
+        healthcheck:
+          test: ["CMD", "test", "-f", "/tools/busybox"]
+          interval: 2s
+          timeout: 1s
+          retries: 10
+        volumes:
+        - shared_tools:/tools
+      main:
+        image: bitnami/app_name
+        entrypoint:
+        - /tools/busybox
+        command:
+        - sleep
+        - "600"
+        volumes:
+        - shared_tools:/tools
+        - /local/path/to/repo/containers/.vib:/shared
+        depends_on:
+          copy-busybox:
+            condition: service_healthy
+
+    volumes:
+      shared_tools:
+        driver: local
+    ```
+
+3. Add the Goss binary:
 
     ```bash
-    $ docker exec e6961 chmod +x /usr/local/bin/gossctl
-    $ docker exec e6961 bash -c 'cd /goss && gossctl --gossfile /goss/app_name/goss/goss.yaml --vars /goss/app_name/goss/vars.yaml validate'
-    .........
+    chmod +x /local/path/to/binary/goss-linux-amd64
+    docker compose cp /local/path/to/binary/goss-linux-amd64 main:/goss
+    ```
 
+4. Launch the tests
+
+    ```console
+    $ docker compose exec --workdir /shared main /goss --gossfile /shared/app_name/goss/goss.yaml --vars /shared/app_name/goss/vars.yaml validate
+    .........
     Total Duration: 1.203s
     Count: 11, Failed: 0, Skipped: 0
     ```

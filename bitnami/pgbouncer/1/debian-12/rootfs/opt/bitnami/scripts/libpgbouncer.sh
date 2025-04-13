@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 #
 # Bitnami Pgpool library
@@ -72,6 +72,9 @@ pgbouncer_validate() {
             print_validation_error "A hba file was not provided. You need to set this value when specifying auth_type to hba"
         elif [[ ! -f "$PGBOUNCER_AUTH_HBA_FILE" ]]; then
             print_validation_error "The hba file in the specified path ${PGBOUNCER_AUTH_HBA_FILE} does not exist"
+        fi
+        if [[ ! -z "$PGBOUNCER_AUTH_IDENT_FILE" ]] && [[ ! -f "$PGBOUNCER_AUTH_IDENT_FILE" ]]; then
+            print_validation_error "The ident map file in the specified path ${PGBOUNCER_AUTH_IDENT_FILE} does not exist"
         fi
     fi
 
@@ -193,7 +196,7 @@ pgbouncer_initialize() {
     pgbouncer_copy_mounted_config
 
     info "Waiting for PostgreSQL backend to be accessible"
-    if ! retry_while "wait-for-port --host $POSTGRESQL_HOST $POSTGRESQL_PORT" "$PGBOUNCER_INIT_SLEEP_TIME" "$PGBOUNCER_INIT_MAX_RETRIES"; then
+    if ! retry_while "wait-for-port --host $POSTGRESQL_HOST $POSTGRESQL_PORT" "$PGBOUNCER_INIT_MAX_RETRIES" "$PGBOUNCER_INIT_SLEEP_TIME"; then
         error "Backend $POSTGRESQL_HOST not accessible"
         exit 1
     else
@@ -269,6 +272,7 @@ pgbouncer_initialize() {
             "auth_file:${PGBOUNCER_AUTH_FILE}"
             "auth_type:${PGBOUNCER_AUTH_TYPE}"
             "auth_hba_file:${PGBOUNCER_AUTH_HBA_FILE}"
+            "auth_ident_file:${PGBOUNCER_AUTH_IDENT_FILE}"
             "auth_query:${PGBOUNCER_AUTH_QUERY}"
             "pidfile:${PGBOUNCER_PID_FILE}"
             "logfile:${PGBOUNCER_LOG_FILE}"
@@ -296,6 +300,7 @@ pgbouncer_initialize() {
             "log_pooler_errors:${PGBOUNCER_LOG_POOLER_ERRORS}"
             "log_stats:${PGBOUNCER_LOG_STATS}"
             "stats_period:${PGBOUNCER_STATS_PERIOD}"
+            "server_round_robin:${PGBOUNCER_SERVER_ROUND_ROBIN}"
             "server_fast_close:${PGBOUNCER_SERVER_FAST_CLOSE}"
             "server_lifetime:${PGBOUNCER_SERVER_LIFETIME}"
             "server_idle_timeout:${PGBOUNCER_SERVER_IDLE_TIMEOUT}"
@@ -307,6 +312,7 @@ pgbouncer_initialize() {
             "query_wait_timeout:${PGBOUNCER_QUERY_WAIT_TIMEOUT}"
             "client_idle_timeout:${PGBOUNCER_CLIENT_IDLE_TIMEOUT}"
             "max_prepared_statements:${PGBOUNCER_MAX_PREPARED_STATEMENTS}"
+            "application_name_add_host:${PGBOUNCER_APPLICATION_NAME_ADD_HOST}"
         )
         for pair in "${key_value_pairs[@]}"; do
             local key value

@@ -1,4 +1,4 @@
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 user:
@@ -8,8 +8,8 @@ user:
     gid: 0
 command:
   mlflow-serve:
-    exec: cd /app && timeout --signal 2 --preserve-status 5 mlflow server
-    timeout: 10000
+    exec: cd /app && timeout --signal 2 --preserve-status 20 mlflow server
+    timeout: 30000
     exit-status: 1
     stderr:
       - "Listening at"

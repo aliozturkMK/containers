@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 #
 # Bitnami Appsmith library
@@ -323,7 +323,7 @@ appsmith_initialize() {
 
             # These parameters are common between RTS and Backend
             # https://github.com/appsmithorg/appsmith/blob/658e369f4fc2f12445af5b238bc4d4a1a34d9a8b/app/rts/.env.example#L1-L3
-            appsmith_conf_set "APPSMITH_MONGODB_URI" "$connection_string"
+            appsmith_conf_set "APPSMITH_DB_URL" "$connection_string"
             appsmith_conf_set "APPSMITH_API_BASE_URL" "http://${APPSMITH_API_HOST}:${APPSMITH_API_PORT}/api/v1"
 
             if [[ "$APPSMITH_MODE" == "backend" ]]; then
@@ -350,12 +350,13 @@ appsmith_initialize() {
                 local -r -a create_user_args=("-L" "http://localhost:${APPSMITH_API_PORT}/api/v1/users/super"
                     "-H" "Origin: http://localhost:${APPSMITH_API_PORT}"
                     "-H" "Content-Type: application/x-www-form-urlencoded"
+                    "-H" "X-Requested-By: Appsmith"
                     "--data-urlencode" "name=${APPSMITH_USERNAME}"
                     "--data-urlencode" "email=${APPSMITH_EMAIL}"
                     "--data-urlencode" "password=${APPSMITH_PASSWORD}"
                     "--data-urlencode" "allowCollectingAnnonymousData=false"
                     "--data-urlencode" "signupForNewsletter=false"
-                    "--data-urlencode" "proficiency=advanced"
+                    "--data-urlencode" "proficiency=Advanced"
                     "--data-urlencode" "useCase='personal project'")
                 if ! debug_execute "${create_user_cmd[@]}" "${create_user_args[@]}"; then
                     error "Installation failed. User ${APPSMITH_USERNAME} could not be created"
@@ -368,7 +369,13 @@ appsmith_initialize() {
             # any extra script. We just connect to the database
             info "Restoring persisted Appsmith $APPSMITH_MODE installation"
             restore_persisted_app "appsmith" "$APPSMITH_DATA_TO_PERSIST"
-            local -r connection_string="$(appsmith_conf_get APPSMITH_MONGODB_URI)"
+            local connection_string
+            connection_string="$(appsmith_conf_get APPSMITH_DB_URL)"
+            # If APPSMITH_DB_URL is not set, fall back to APPSMITH_MONGODB_URI
+            # https://github.com/appsmithorg/appsmith/commit/7e339d419dfffbb9d0178a9e5c54afb85600976f#diff-0359aa9032b425f4bd7785d82ab0684e159a38fcfb5a6036c31a070e21e5952a
+            if [[ -z "${connection_string}" ]]; then
+                connection_string="$(appsmith_conf_get APPSMITH_MONGODB_URI)"
+            fi
             appsmith_wait_for_mongodb_connection "$connection_string"
         fi
     fi
@@ -412,7 +419,12 @@ appsmith_backend_start_bg() {
 
     echo "$!" >"$APPSMITH_PID_FILE"
 
-    wait_for_log_entry "License verification completed with status: valid" "$log_file" 30 10
+    if ! retry_while "debug_execute curl --silent --fail http://localhost:${APPSMITH_API_PORT}/api/v1/health" "30" "10"; then
+        error "Timed out waiting for Appsmith healthcheck. Check logs for more information..."
+        cat "$log_file"
+        return 1
+    fi
+
     info "Appsmith started successfully"
 }
 

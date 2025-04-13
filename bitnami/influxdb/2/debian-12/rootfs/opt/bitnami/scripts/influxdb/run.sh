@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright VMware, Inc.
+# Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
 # shellcheck disable=SC1091
@@ -18,10 +18,6 @@ set -o pipefail
 . /opt/bitnami/scripts/influxdb-env.sh
 
 info "** Starting InfluxDB **"
-if [[ -f "$INFLUXDB_CONF_FILE" ]]; then
-  export INFLUXD_CONFIG_PATH=${INFLUXDB_CONF_FILE:-}
-fi
-
 export HOME=/bitnami/influxdb/
 
 if am_i_root; then
